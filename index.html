@@ -24,6 +24,10 @@
   --confirma: #1d8a4e;   /* tecla verde da urna */
   --corrige: #d9731a;    /* tecla laranja da urna */
   --chip: #e6ebf3;
+  --lula: #c4302b;
+  --head: #14213a;
+  --head-ink: #eef1f5;
+  --flavio: #2f5fb3;
   --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-num: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
   color-scheme: light;
@@ -32,15 +36,18 @@
   :root:not([data-theme="light"]) {
     --bg: #0d1424; --card: #16203a; --ink: #e8edf6; --muted: #98a5bd; --line: #26324f;
     --accent: #7fa6ef; --bar: #2a3d66; --confirma: #3cc27a; --corrige: #f0954a; --chip: #22304f;
+    --lula: #ef6a5f; --flavio: #6f9cf0;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1424; --card: #16203a; --ink: #e8edf6; --muted: #98a5bd; --line: #26324f;
   --accent: #7fa6ef; --bar: #2a3d66; --confirma: #3cc27a; --corrige: #f0954a; --chip: #22304f;
+  --lula: #ef6a5f; --flavio: #6f9cf0;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
@@ -49,7 +56,7 @@ body {
 }
 header {
   position: sticky; top: 0; z-index: 5;
-  background: var(--ink); color: var(--bg);
+  background: var(--head); color: var(--head-ink);
   padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 0;
 }
 .top { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
@@ -63,10 +70,11 @@ header {
 #refresh svg { width: 22px; height: 22px; }
 #refresh.spin svg { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-nav { display: flex; gap: 4px; margin-top: 10px; }
+nav { display: flex; gap: 2px; margin: 10px -16px 0; padding: 0 10px; overflow-x: auto; scrollbar-width: none; }
+nav::-webkit-scrollbar { display: none; }
 nav button {
-  flex: 1; border: 0; background: transparent; color: inherit; opacity: .7;
-  font: 600 1rem var(--font-body); padding: 10px 4px 12px; cursor: pointer;
+  flex: 1 0 auto; border: 0; white-space: nowrap; background: transparent; color: inherit; opacity: .7;
+  font: 600 .95rem var(--font-body); padding: 10px 8px 12px; cursor: pointer;
   border-bottom: 3px solid transparent;
 }
 nav button[aria-selected="true"] { opacity: 1; border-bottom-color: var(--confirma); }
@@ -122,6 +130,54 @@ section.card { background: var(--card); border-radius: 14px; padding: 14px 14px 
 .parties span { font: 600 .82rem var(--font-num); background: var(--chip); border-radius: 6px; padding: 4px 7px; font-variant-numeric: tabular-nums; }
 .parties span b { color: var(--confirma); }
 
+/* comparecimento, brancos e nulos */
+.turn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 6px 0 8px; }
+.turn div { background: var(--chip); border-radius: 8px; padding: 6px 7px; min-width: 0; }
+.turn span { display: block; font: 600 .66rem var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.turn b { display: block; font: 700 1.1rem/1.1 var(--font-num); font-variant-numeric: tabular-nums; }
+.turn small { display: block; font: 500 .74rem var(--font-num); color: var(--muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.turn-note { font-size: .72rem; color: var(--muted); margin: -2px 0 6px; }
+
+/* aba de análise */
+.an { max-width: 760px; margin: 0 auto; padding: 18px 16px 40px; font-size: 1.02rem; line-height: 1.6; }
+.an section { scroll-margin-top: 130px; border-top: 1px solid var(--line); margin-top: 26px; padding-top: 6px; }
+.an p { margin: .7em 0; max-width: 65ch; }
+.an-kicker { font: 600 .74rem var(--font-body); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0; }
+.an-title { font: 700 2rem/1.05 var(--font-num); text-transform: uppercase; letter-spacing: .01em; margin: .2em 0 .3em; text-wrap: balance; }
+.an-lede { color: var(--muted); font-size: .95rem; }
+.an h3 { font: 700 1.55rem/1.1 var(--font-num); text-transform: uppercase; letter-spacing: .02em; margin: .7em 0 .3em; text-wrap: balance; }
+.an h4 { font: 700 1.12rem/1.2 var(--font-body); margin: 1.3em 0 .2em; text-wrap: balance; }
+.an-jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px; }
+.an-jump a { font: 600 .85rem var(--font-body); color: var(--ink); background: var(--chip); border-radius: 999px; padding: 6px 11px; text-decoration: none; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin: 10px 0 4px; }
+.stats div { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.stats span { display: block; font: 600 .68rem var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.stats b { display: block; font: 700 1.4rem/1.1 var(--font-num); font-variant-numeric: tabular-nums; }
+.stats small { display: block; font-size: .76rem; color: var(--muted); line-height: 1.3; }
+.lula-t { color: var(--lula); font-weight: 700; }
+.flavio-t { color: var(--flavio); font-weight: 700; }
+.tw { overflow-x: auto; margin: 10px 0 6px; -webkit-overflow-scrolling: touch; }
+.an table { border-collapse: collapse; width: 100%; font-size: .84rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.an th { text-align: left; font: 600 .68rem var(--font-body); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 6px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.an td { padding: 7px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.an td.n, .an th.n { text-align: right; white-space: nowrap; }
+.an td:first-child { font-weight: 600; }
+.duo { display: flex; width: 64px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--chip); margin-left: auto; }
+.duo i { display: block; height: 100%; }
+.duo i.lula { background: var(--lula); } .duo i.flavio { background: var(--flavio); }
+.duo i.gov { background: var(--lula); } .duo i.opo { background: var(--accent); }
+.dv { display: block; position: relative; width: 84px; height: 10px; margin-left: auto; background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; }
+.dv i { position: absolute; top: 1px; height: 8px; border-radius: 2px; }
+.dv i.r { left: 50%; } .dv i.l { right: 50%; }
+.dv i.lula { background: var(--lula); } .dv i.flavio { background: var(--flavio); }
+.tag { font: 700 .64rem var(--font-body); text-transform: uppercase; letter-spacing: .05em; padding: 2px 5px; border-radius: 4px; background: var(--chip); color: var(--muted); }
+.tag.gov { background: var(--confirma); color: #fff; }
+table.banc td:last-child { white-space: normal; text-align: left; min-width: 180px; font-size: .78rem; color: var(--muted); }
+.an details { margin: 8px 0; }
+.an summary { cursor: pointer; font: 600 .92rem var(--font-body); color: var(--accent); padding: 6px 0; }
+.an-foot { font-size: .78rem; color: var(--muted); }
+.an-method p { font-size: .9rem; color: var(--muted); }
+
 footer { font-size: .78rem; color: var(--muted); text-align: center; padding: 0 16px 24px; }
 footer a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -139,10 +195,142 @@ footer a { color: var(--accent); }
   <nav role="tablist">
     <button role="tab" id="tab-resumo" data-tab="resumo" aria-selected="true">Resumo</button>
     <button role="tab" id="tab-ce" data-tab="ce" aria-selected="false">Ceará</button>
+    <button role="tab" id="tab-fortaleza" data-tab="fortaleza" aria-selected="false">Fortaleza</button>
     <button role="tab" id="tab-ap" data-tab="ap" aria-selected="false">Amapá</button>
+    <button role="tab" id="tab-macapa" data-tab="macapa" aria-selected="false">Macapá</button>
+    <button role="tab" id="tab-analise" data-tab="analise" aria-selected="false">Análise</button>
   </nav>
 </header>
 <main id="main"></main>
+<article id="analise" class="an" hidden>
+  <p class="an-kicker">Retrato do 1º turno · TSE, 4 de outubro, 21h38</p>
+  <h2 class="an-title">O que a urna disse no Brasil, no Ceará e no Amapá</h2>
+  <p class="an-lede">Brasil com 99,5% apurado, Ceará com 98,4%, Amapá fechado. Os números de deputado no Ceará ainda são projeção minha (explico no fim como fiz). O resto é contagem oficial, e o que for opinião está escrito como opinião.</p>
+
+  <nav class="an-jump" aria-label="Seções da análise">
+    <a href="#an-brasil">Brasil</a><a href="#an-ceara">Ceará</a><a href="#an-fortaleza">Fortaleza</a><a href="#an-amapa">Amapá</a><a href="#an-brancos">Brancos e nulos</a><a href="#an-turno">2º turno</a>
+  </nav>
+
+  <section id="an-brasil">
+    <h3>Brasil: o sobrenome Bolsonaro chegou na frente</h3>
+    <div class="stats">
+      <div><span>Flávio Bolsonaro</span><b class="flavio-t">47,13%</b><small>55,9 milhões</small></div>
+      <div><span>Lula</span><b class="lula-t">45,04%</b><small>53,5 milhões</small></div>
+      <div><span>Diferença</span><b>2,5 mi</b><small>votos a favor de Flávio</small></div>
+    </div>
+    <p>Flávio Bolsonaro termina o primeiro turno na frente de Lula. Vai ter segundo turno no dia 25 de outubro, e o PT chega nele atrás. Isso não acontecia desde 2018.</p>
+    <p>Comparar com 2022 deixa o tamanho da mudança mais claro. Naquele primeiro turno Lula fez 48,43% e Jair Bolsonaro 43,20%. Agora Lula caiu uns três pontos e meio e o lado bolsonarista subiu quase quatro, com um candidato que não é o Jair. O pai está inelegível e mesmo assim o voto passou pro filho quase inteiro, com sobra. Pra mim esse é o dado mais pesado da noite. Muita gente apostou que o bolsonarismo sem Bolsonaro na urna ia rachar. Não rachou.</p>
+    <p>O mapa é o de sempre, só que mais apertado pro PT. Lula ganhou nos nove estados do Nordeste e saiu da região com quase 11 milhões de votos de vantagem. Só que perdeu 5,7 milhões no Sudeste, 5 milhões no Sul e 2,2 milhões no Centro-Oeste. No Norte, Flávio tirou meio milhão a mais. Lula ganhou 12 estados e Flávio 15.</p>
+    <div class="tw"><table class="reg"><thead><tr><th>Região</th><th class=n></th><th class=n>Lula</th><th class=n>Flávio</th><th class=n>Saldo</th></tr></thead><tbody><tr><td>Norte</td><td class=n><span class="duo"><i class="lula" style="width:44.5%"></i><i class="flavio" style="width:49.3%"></i></span></td><td class=n>44,5</td><td class=n>49,3</td><td class=n><span class="flavio-t">Flávio 0,49 mi</span></td></tr><tr><td>Nordeste</td><td class=n><span class="duo"><i class="lula" style="width:63.7%"></i><i class="flavio" style="width:31.0%"></i></span></td><td class=n>63,7</td><td class=n>31,0</td><td class=n><span class="lula-t">Lula 10,89 mi</span></td></tr><tr><td>Centro-Oeste</td><td class=n><span class="duo"><i class="lula" style="width:32.6%"></i><i class="flavio" style="width:56.5%"></i></span></td><td class=n>32,6</td><td class=n>56,5</td><td class=n><span class="flavio-t">Flávio 2,17 mi</span></td></tr><tr><td>Sudeste</td><td class=n><span class="duo"><i class="lula" style="width:39.6%"></i><i class="flavio" style="width:51.4%"></i></span></td><td class=n>39,6</td><td class=n>51,4</td><td class=n><span class="flavio-t">Flávio 5,69 mi</span></td></tr><tr><td>Sul</td><td class=n><span class="duo"><i class="lula" style="width:31.3%"></i><i class="flavio" style="width:60.1%"></i></span></td><td class=n>31,3</td><td class=n>60,1</td><td class=n><span class="flavio-t">Flávio 5,04 mi</span></td></tr></tbody></table></div>
+    <p>Minas Gerais merece uma linha própria. Lula ganhou Minas nos dois turnos de 2022, e agora perdeu por 48,4% a 43,2%. Quem quer ganhar a Presidência costuma precisar de Minas, e o PT vai ter três semanas pra virar lá.</p>
+    <p>A tal terceira via virou pó. Augusto Cury (Avante) fez 2,90%, Renan Santos (Missão) 2,25%, Ronaldo Caiado (PSD) 2,19% e Romeu Zema (Novo) 0,27%. Dois ex-governadores de estados grandes somando menos de 2,5%. A polarização não deixou espaço nem pra quem tinha máquina.</p>
+    <details class="an-more">
+      <summary>Ver os 27 estados</summary>
+      <div class="tw"><table class="uf"><thead><tr><th>Estado</th><th class=n>Flávio ◂ ▸ Lula</th><th class=n>Lula</th><th class=n>Flávio</th><th class=n>Dif. (pts)</th></tr></thead><tbody><tr><td>Roraima</td><td class=n><span class="dv"><i class="flavio l" style="width:48.2%"></i></span></td><td class=n>22,9</td><td class=n>71,1</td><td class=n><span class="flavio-t">−48,2</span></td></tr><tr><td>Santa Catarina</td><td class=n><span class="dv"><i class="flavio l" style="width:41.6%"></i></span></td><td class=n>25,0</td><td class=n>66,7</td><td class=n><span class="flavio-t">−41,6</span></td></tr><tr><td>Rondônia</td><td class=n><span class="dv"><i class="flavio l" style="width:41.6%"></i></span></td><td class=n>25,9</td><td class=n>67,5</td><td class=n><span class="flavio-t">−41,6</span></td></tr><tr><td>Mato Grosso</td><td class=n><span class="dv"><i class="flavio l" style="width:36.0%"></i></span></td><td class=n>29,2</td><td class=n>65,1</td><td class=n><span class="flavio-t">−36,0</span></td></tr><tr><td>Acre</td><td class=n><span class="dv"><i class="flavio l" style="width:35.8%"></i></span></td><td class=n>28,7</td><td class=n>64,6</td><td class=n><span class="flavio-t">−35,8</span></td></tr><tr><td>Paraná</td><td class=n><span class="dv"><i class="flavio l" style="width:28.7%"></i></span></td><td class=n>31,2</td><td class=n>59,9</td><td class=n><span class="flavio-t">−28,7</span></td></tr><tr><td>Mato Grosso do Sul</td><td class=n><span class="dv"><i class="flavio l" style="width:23.9%"></i></span></td><td class=n>34,7</td><td class=n>58,6</td><td class=n><span class="flavio-t">−23,9</span></td></tr><tr><td>Goiás</td><td class=n><span class="dv"><i class="flavio l" style="width:22.6%"></i></span></td><td class=n>31,1</td><td class=n>53,6</td><td class=n><span class="flavio-t">−22,6</span></td></tr><tr><td>Rio Grande do Sul</td><td class=n><span class="dv"><i class="flavio l" style="width:19.9%"></i></span></td><td class=n>35,7</td><td class=n>55,6</td><td class=n><span class="flavio-t">−19,9</span></td></tr><tr><td>Espírito Santo</td><td class=n><span class="dv"><i class="flavio l" style="width:17.0%"></i></span></td><td class=n>37,8</td><td class=n>54,8</td><td class=n><span class="flavio-t">−17,0</span></td></tr><tr><td>São Paulo</td><td class=n><span class="dv"><i class="flavio l" style="width:13.7%"></i></span></td><td class=n>38,2</td><td class=n>51,9</td><td class=n><span class="flavio-t">−13,7</span></td></tr><tr><td>Rio de Janeiro</td><td class=n><span class="dv"><i class="flavio l" style="width:13.6%"></i></span></td><td class=n>39,4</td><td class=n>53,0</td><td class=n><span class="flavio-t">−13,6</span></td></tr><tr><td>Distrito Federal</td><td class=n><span class="dv"><i class="flavio l" style="width:13.2%"></i></span></td><td class=n>38,1</td><td class=n>51,3</td><td class=n><span class="flavio-t">−13,2</span></td></tr><tr><td>Tocantins</td><td class=n><span class="dv"><i class="flavio l" style="width:7.0%"></i></span></td><td class=n>43,4</td><td class=n>50,4</td><td class=n><span class="flavio-t">−7,0</span></td></tr><tr><td>Minas Gerais</td><td class=n><span class="dv"><i class="flavio l" style="width:5.2%"></i></span></td><td class=n>43,2</td><td class=n>48,4</td><td class=n><span class="flavio-t">−5,2</span></td></tr><tr><td>Amapá</td><td class=n><span class="dv"><i class="lula r" style="width:0.0%"></i></span></td><td class=n>45,7</td><td class=n>45,7</td><td class=n><span class="lula-t">+0,0</span></td></tr><tr><td>Amazonas</td><td class=n><span class="dv"><i class="lula r" style="width:2.5%"></i></span></td><td class=n>47,8</td><td class=n>45,3</td><td class=n><span class="lula-t">+2,5</span></td></tr><tr><td>Pará</td><td class=n><span class="dv"><i class="lula r" style="width:5.1%"></i></span></td><td class=n>49,8</td><td class=n>44,6</td><td class=n><span class="lula-t">+5,1</span></td></tr><tr><td>Alagoas</td><td class=n><span class="dv"><i class="lula r" style="width:14.0%"></i></span></td><td class=n>54,6</td><td class=n>40,6</td><td class=n><span class="lula-t">+14,0</span></td></tr><tr><td>Rio Grande do Norte</td><td class=n><span class="dv"><i class="lula r" style="width:24.9%"></i></span></td><td class=n>59,7</td><td class=n>34,8</td><td class=n><span class="lula-t">+24,9</span></td></tr><tr><td>Paraíba</td><td class=n><span class="dv"><i class="lula r" style="width:28.2%"></i></span></td><td class=n>61,3</td><td class=n>33,1</td><td class=n><span class="lula-t">+28,2</span></td></tr><tr><td>Ceará</td><td class=n><span class="dv"><i class="lula r" style="width:31.7%"></i></span></td><td class=n>63,1</td><td class=n>31,4</td><td class=n><span class="lula-t">+31,7</span></td></tr><tr><td>Sergipe</td><td class=n><span class="dv"><i class="lula r" style="width:32.1%"></i></span></td><td class=n>62,7</td><td class=n>30,6</td><td class=n><span class="lula-t">+32,1</span></td></tr><tr><td>Pernambuco</td><td class=n><span class="dv"><i class="lula r" style="width:32.3%"></i></span></td><td class=n>63,4</td><td class=n>31,1</td><td class=n><span class="lula-t">+32,3</span></td></tr><tr><td>Maranhão</td><td class=n><span class="dv"><i class="lula r" style="width:32.9%"></i></span></td><td class=n>63,9</td><td class=n>31,0</td><td class=n><span class="lula-t">+32,9</span></td></tr><tr><td>Bahia</td><td class=n><span class="dv"><i class="lula r" style="width:37.3%"></i></span></td><td class=n>66,0</td><td class=n>28,7</td><td class=n><span class="lula-t">+37,3</span></td></tr><tr><td>Piauí</td><td class=n><span class="dv"><i class="lula r" style="width:46.8%"></i></span></td><td class=n>70,9</td><td class=n>24,1</td><td class=n><span class="lula-t">+46,8</span></td></tr></tbody></table></div>
+    </details>
+  </section>
+
+  <section id="an-ceara">
+    <h3>Ceará: o PT segura o estado, e o estado se divide em dois</h3>
+    <div class="stats">
+      <div><span>Elmano (PT)</span><b>53,04%</b><small>reeleito no 1º turno</small></div>
+      <div><span>Ciro Gomes (PSDB)</span><b>46,37%</b><small>2,47 milhões de votos</small></div>
+      <div><span>Lula no Ceará</span><b class="lula-t">63,13%</b><small>Flávio 31,40%</small></div>
+    </div>
+    <p>Elmano de Freitas está reeleito no primeiro turno. Com 98,4% apurado ele tem uns 350 mil votos de frente e mais de 53% dos válidos, e o que falta contar não chega pra levar a eleição ao segundo turno.</p>
+    <p>Ciro Gomes voltou a disputar o governo do Ceará mais de três décadas depois de ter governado o estado, agora pelo PSDB, com Roberto Cláudio de vice e o PL dentro da coligação. Fez 46%, que não é pouco. O que chama atenção é a conta dos votos. Flávio teve 31% no Ceará e Ciro teve 46%, então Ciro foi buscar uns 15 pontos fora do eleitorado bolsonarista. E do outro lado, Lula fez 63% e Elmano 53%: perto de 670 mil eleitores votaram em Lula pra presidente e não votaram em Elmano. Boa parte deles deve ter ido pro Ciro. Esse eleitor Lula-Ciro existe, e ele mora muito em Fortaleza (vou chegar lá).</p>
+    <p>O Ceará virou dois. Fora da capital Elmano ganhou de 55,6% a 43,9% e abriu uns 457 mil votos. Venceu em 149 dos 184 municípios. Os redutos mais fortes dele são cidades pequenas do sertão e do Cariri, como Aiuaba (78,6%), Poranga, Potengi, Cariús e Santana do Cariri, todas acima de 73%. Ciro ganhou onde a família Ferreira Gomes tem raiz e onde mora gente de renda mais alta: Sobral deu 70,9% pra ele, e vieram atrás Forquilha, Frecheirinha, Varjota e Meruoca, tudo zona norte, além do Eusébio (58,9%), na Região Metropolitana.</p>
+    <div class="tw"><table class="ce"><thead><tr><th>Cidade</th><th class=n>Eleitores</th><th class=n>Elmano × Ciro</th><th class=n>Elmano</th><th class=n>Ciro</th><th class=n>Lula (pres.)</th></tr></thead><tbody><tr><td>Fortaleza</td><td class=n>1.791.701</td><td class=n><span class="duo"><i class="gov" style="width:46.0%"></i><i class="opo" style="width:52.9%"></i></span></td><td class=n>46,0</td><td class=n>52,9</td><td class=n>53,5</td></tr><tr><td>Caucaia</td><td class=n>249.377</td><td class=n><span class="duo"><i class="gov" style="width:48.6%"></i><i class="opo" style="width:50.5%"></i></span></td><td class=n>48,6</td><td class=n>50,5</td><td class=n>56,0</td></tr><tr><td>Juazeiro do Norte</td><td class=n>199.690</td><td class=n><span class="duo"><i class="gov" style="width:56.8%"></i><i class="opo" style="width:42.3%"></i></span></td><td class=n>56,8</td><td class=n>42,3</td><td class=n>67,1</td></tr><tr><td>Maracanaú</td><td class=n>179.379</td><td class=n><span class="duo"><i class="gov" style="width:45.8%"></i><i class="opo" style="width:53.4%"></i></span></td><td class=n>45,8</td><td class=n>53,4</td><td class=n>54,3</td></tr><tr><td>Sobral</td><td class=n>152.837</td><td class=n><span class="duo"><i class="gov" style="width:28.6%"></i><i class="opo" style="width:70.9%"></i></span></td><td class=n>28,6</td><td class=n>70,9</td><td class=n>59,2</td></tr><tr><td>Itapipoca</td><td class=n>103.157</td><td class=n><span class="duo"><i class="gov" style="width:60.4%"></i><i class="opo" style="width:39.3%"></i></span></td><td class=n>60,4</td><td class=n>39,3</td><td class=n>70,5</td></tr><tr><td>Crato</td><td class=n>95.929</td><td class=n><span class="duo"><i class="gov" style="width:67.0%"></i><i class="opo" style="width:32.5%"></i></span></td><td class=n>67,0</td><td class=n>32,5</td><td class=n>77,0</td></tr><tr><td>Maranguape</td><td class=n>83.541</td><td class=n><span class="duo"><i class="gov" style="width:52.5%"></i><i class="opo" style="width:47.0%"></i></span></td><td class=n>52,5</td><td class=n>47,0</td><td class=n>60,0</td></tr><tr><td>Iguatu</td><td class=n>71.277</td><td class=n><span class="duo"><i class="gov" style="width:62.0%"></i><i class="opo" style="width:37.5%"></i></span></td><td class=n>62,0</td><td class=n>37,5</td><td class=n>76,3</td></tr><tr><td>Aquiraz</td><td class=n>69.630</td><td class=n><span class="duo"><i class="gov" style="width:51.2%"></i><i class="opo" style="width:48.2%"></i></span></td><td class=n>51,2</td><td class=n>48,2</td><td class=n>58,4</td></tr><tr><td>Horizonte</td><td class=n>62.775</td><td class=n><span class="duo"><i class="gov" style="width:50.6%"></i><i class="opo" style="width:48.9%"></i></span></td><td class=n>50,6</td><td class=n>48,9</td><td class=n>57,9</td></tr><tr><td>Quixadá</td><td class=n>61.599</td><td class=n><span class="duo"><i class="gov" style="width:53.8%"></i><i class="opo" style="width:46.0%"></i></span></td><td class=n>53,8</td><td class=n>46,0</td><td class=n>60,2</td></tr><tr><td>Eusébio</td><td class=n>59.875</td><td class=n><span class="duo"><i class="gov" style="width:40.3%"></i><i class="opo" style="width:58.9%"></i></span></td><td class=n>40,3</td><td class=n>58,9</td><td class=n>47,4</td></tr><tr><td>Cascavel</td><td class=n>60.464</td><td class=n><span class="duo"><i class="gov" style="width:50.3%"></i><i class="opo" style="width:49.1%"></i></span></td><td class=n>50,3</td><td class=n>49,1</td><td class=n>60,8</td></tr></tbody></table></div>
+    <h4>Senado: a briga dos irmãos teve placar</h4>
+    <p>Cid Gomes foi o mais votado pro Senado, com 31,14%, e Luizianne Lins (Rede) ficou com a segunda vaga, com 28,97%. Os dois eram da chapa do governo. Capitão Wagner (União) fez 20,77% e Alcides Fernandes (PL), pai do deputado André Fernandes, 18,36%. A base de Elmano levou as duas cadeiras.</p>
+    <p>Fica uma cena difícil de esquecer: na mesma noite, Cid é o senador mais votado do estado e o irmão Ciro perde o governo. Os Ferreira Gomes seguem no centro da política cearense, só que agora um contra o outro.</p>
+    <h4>Câmara: André Fernandes sozinho fez mais de meio PL</h4>
+    <p>André Fernandes teve 678 mil votos, 12,5% de todo o Ceará, quase o triplo do segundo colocado (Yury do Paredão, MDB, com 254 mil). O PL é o partido mais votado pra deputado federal, com 1,09 milhão, e deve ficar com 4 das 22 vagas, empatado com o PSB.</p>
+    <p>Pela minha projeção a base do governo fica com 15 das 22 cadeiras e a oposição com 7. Tem uma injustiça da regra que vale contar. A federação PSOL/Rede teve 190 mil votos e precisava de 80% do quociente eleitoral (uns 197,5 mil) pra disputar as sobras. Ficou uns 6,9 mil votos abaixo. Por isso Renato Roseno, com 116 mil votos, fica de fora, enquanto Carmelo Neto (PL) entra com 55 mil e Emanuel Acrizio (Solidariedade) com 57 mil. A regra é essa e serve pra todo mundo, mas o resultado incomoda.</p>
+    <details class="an-more"><summary>Projeção da bancada federal do Ceará (22 vagas)</summary><div class="tw"><table class="banc"><thead><tr><th>Partido / federação</th><th class=n>Lado</th><th class=n>Votos</th><th class=n>Vagas</th><th class=n>Quem entra</th></tr></thead><tbody><tr><td>PL</td><td class=n><span class="tag opo">oposição</span></td><td class=n>1.094.117</td><td class=n>4</td><td class=n>André Fernandes, Matheus Noronha, Dr Jaziel, Carmelo Neto</td></tr><tr><td>PSB</td><td class=n><span class="tag gov">base</span></td><td class=n>849.294</td><td class=n>4</td><td class=n>Tainah Marinho, Robério Monteiro, Idilvan, Dr. Acilon</td></tr><tr><td>PT/PC do B/PV</td><td class=n><span class="tag gov">base</span></td><td class=n>703.837</td><td class=n>3</td><td class=n>Fernando Santana, Raimundo Martins, Luisa Cela</td></tr><tr><td>UNIÃO/PP</td><td class=n><span class="tag opo">oposição</span></td><td class=n>629.295</td><td class=n>3</td><td class=n>Moses Rodrigues, Danilo Forte, Aj Albuquerque</td></tr><tr><td>PSD</td><td class=n><span class="tag gov">base</span></td><td class=n>555.949</td><td class=n>3</td><td class=n>Domingos Neto, Célio Studart, Fernanda Pessoa</td></tr><tr><td>PRD/SOLIDARIEDADE</td><td class=n><span class="tag gov">base</span></td><td class=n>414.816</td><td class=n>2</td><td class=n>Giordanna Mano, Emanuel Acrizio</td></tr><tr><td>MDB</td><td class=n><span class="tag gov">base</span></td><td class=n>401.853</td><td class=n>2</td><td class=n>Yury Do Paredão, Nenen Coelho</td></tr><tr><td>REPUBLICANOS</td><td class=n><span class="tag gov">base</span></td><td class=n>200.692</td><td class=n>1</td><td class=n>Erika Amorim</td></tr><tr><td>PSOL/REDE</td><td class=n><span class="tag gov">base</span></td><td class=n>190.654</td><td class=n>0</td><td class=n>–</td></tr><tr><td>PDT</td><td class=n><span class="tag gov">base</span></td><td class=n>168.012</td><td class=n>0</td><td class=n>–</td></tr><tr><td>PSDB/CIDADANIA</td><td class=n><span class="tag opo">oposição</span></td><td class=n>167.646</td><td class=n>0</td><td class=n>–</td></tr></tbody></table></div></details>
+    <h4>Assembleia: maioria folgada pro Elmano</h4>
+    <p>Na Assembleia a projeção dá 34 cadeiras pra base e 12 pra oposição, de 46. O PSB deve ser a maior bancada (13), com a federação do PT logo atrás (12) e o PL com 6. Pro segundo mandato Elmano vai governar sem susto no plenário.</p>
+    <p>O PDT praticamente sumiu do mapa. Teve 168 mil votos pra federal e só 20 mil pra estadual, sem eleger ninguém. É o partido que tinha a prefeitura de Fortaleza até 2024. A saída dos Ferreira Gomes levou o PDT cearense junto.</p>
+    <details class="an-more"><summary>Projeção da Assembleia do Ceará (46 vagas)</summary><div class="tw"><table class="banc"><thead><tr><th>Partido / federação</th><th class=n>Lado</th><th class=n>Votos</th><th class=n>Vagas</th><th class=n>Quem entra</th></tr></thead><tbody><tr><td>PSB</td><td class=n><span class="tag gov">base</span></td><td class=n>1.347.732</td><td class=n>13</td><td class=n>Romeu Aldigueri, Osmar Baquit, Sérgio Aguiar, Guilherme Landim, Jeová Mota, Fabiola Carneiro, Elizeu Monteiro, Marcos Sobreira, Paloma Nunes, Marta Gonçalves, Manu Pimenta, Dr. Geronimo, Salmito</td></tr><tr><td>PT/PC do B/PV</td><td class=n><span class="tag gov">base</span></td><td class=n>1.290.546</td><td class=n>12</td><td class=n>Liziany Medeiros, Lais Nunes, Jade Romero, Catanho, Jô Farias, De Assis Diniz, Franzé Carneiro, Missias Dias, Gadyel, Ilo Neto, João Jaime, Moisés Braz</td></tr><tr><td>PL</td><td class=n><span class="tag opo">oposição</span></td><td class=n>721.211</td><td class=n>6</td><td class=n>Tancredo Dos Santos, Bella Carmelo, Abreu Junior, Dra Silvana, Dra Mayra Pinheiro, Pastor Frota</td></tr><tr><td>PSDB/CIDADANIA</td><td class=n><span class="tag opo">oposição</span></td><td class=n>407.921</td><td class=n>3</td><td class=n>Felipe Vasques, Davi Benevides, Emilia Pessoa</td></tr><tr><td>UNIÃO/PP</td><td class=n><span class="tag opo">oposição</span></td><td class=n>320.439</td><td class=n>3</td><td class=n>Zezinho Albuquerque, Moses Filho, James Bel</td></tr><tr><td>PSD</td><td class=n><span class="tag gov">base</span></td><td class=n>315.210</td><td class=n>3</td><td class=n>Domingos Filho, Firmo Camurça, Simão Pedro</td></tr><tr><td>PSOL/REDE</td><td class=n><span class="tag gov">base</span></td><td class=n>275.325</td><td class=n>2</td><td class=n>Gabriel Biologia, Leo Suricate</td></tr><tr><td>REPUBLICANOS</td><td class=n><span class="tag gov">base</span></td><td class=n>270.687</td><td class=n>2</td><td class=n>David Durand, Gardel Rolim</td></tr><tr><td>MDB</td><td class=n><span class="tag gov">base</span></td><td class=n>202.748</td><td class=n>1</td><td class=n>Davi De Raimundão</td></tr><tr><td>PRD/SOLIDARIEDADE</td><td class=n><span class="tag gov">base</span></td><td class=n>113.195</td><td class=n>1</td><td class=n>Georgia Do Marcelão</td></tr><tr><td>MOBILIZA</td><td class=n><span class="tag gov">base</span></td><td class=n>68.936</td><td class=n>0</td><td class=n>–</td></tr></tbody></table></div></details>
+  </section>
+
+  <section id="an-fortaleza">
+    <h3>Fortaleza: a capital votou Lula e votou Ciro</h3>
+    <div class="stats">
+      <div><span>Lula na capital</span><b class="lula-t">53,48%</b><small>Flávio 39,34%</small></div>
+      <div><span>Ciro na capital</span><b>52,91%</b><small>Elmano 46,04%</small></div>
+      <div><span>Abstenção</span><b>13,0%</b><small>a menor das disputas olhadas aqui</small></div>
+    </div>
+    <p>Fortaleza é a parte mais interessante dessa eleição, e é a que mais deveria preocupar o PT cearense.</p>
+    <p>A capital deu vitória a Lula (53,5% a 39,3%) e, no mesmo dia, deu vitória a Ciro contra o candidato do PT (52,9% a 46,0%). Ciro teve 758 mil votos na cidade e Flávio teve 586 mil. Mesmo que todo eleitor de Flávio tenha votado em Ciro, sobram pelo menos 172 mil votos de Ciro que vieram de outro lugar, a maior parte deles muito provavelmente de quem apertou 13 pra presidente. É uns 12% dos votos válidos da cidade. Lula não carregou Elmano em Fortaleza.</p>
+    <p>Por que isso acontece? Não tenho pesquisa de boca de urna pra provar, então é leitura minha. Ciro já foi prefeito de Fortaleza, Roberto Cláudio foi prefeito por oito anos, e os dois têm um eleitor de classe média que gosta deles e não gosta do bolsonarismo. Esse eleitor vota Lula contra Bolsonaro, mas na disputa estadual não se sente obrigado a ficar com o PT.</p>
+    <h4>O teto da direita na cidade</h4>
+    <p>Olhando 2024 e 2026 juntos aparece um padrão. Sozinha, a direita bolsonarista bate em uns 40% em Fortaleza: André Fernandes fez 40,2% no primeiro turno de prefeito em 2024 e Flávio fez 39,3% agora. Ela só passa disso quando soma com outro grupo. Foi assim no segundo turno de 2024, quando André chegou a 49,6% e perdeu pra Evandro Leitão por menos de 11 mil votos. E foi assim agora com Ciro, que passou de 50% na capital tendo o PL na coligação.</p>
+    <div class="tw"><table class="fort"><thead><tr><th>Medida em Fortaleza</th><th class=n>Campo PT</th><th class=n>Direita / oposição</th></tr></thead><tbody><tr><td>Prefeito 2024, 1º turno</td><td class=n>Evandro 34,4%</td><td class=n>André 40,2%</td></tr><tr><td>Prefeito 2024, 2º turno</td><td class=n>Evandro 50,4%</td><td class=n>André 49,6%</td></tr><tr><td>Presidente 2026</td><td class=n>Lula 53,5%</td><td class=n>Flávio 39,3%</td></tr><tr><td>Governador 2026</td><td class=n>Elmano 46,0%</td><td class=n>Ciro 52,9%</td></tr><tr><td>Senado 2026 (soma da chapa)</td><td class=n>Cid + Luizianne 52,7%</td><td class=n>Wagner + Alcides 45,9%</td></tr></tbody></table></div>
+    <p>André Fernandes continua sendo o nome mais forte da direita na cidade. Só em Fortaleza ele teve 313.577 votos pra deputado federal, 21,7% dos válidos da capital e 46% de tudo que ele fez no estado. Pra comparar, o segundo mais votado na capital, Renato Roseno, teve 77 mil.</p>
+    <div class="tw"><table class=""><thead><tr><th>Federal, mais votados na capital</th><th class=n>Partido</th><th class=n>Votos</th><th class=n>%</th></tr></thead><tbody><tr><td>André Fernandes</td><td class=n>PL</td><td class=n>313.577</td><td class=n>21,70</td></tr><tr><td>Renato Roseno</td><td class=n>PSOL</td><td class=n>77.019</td><td class=n>5,33</td></tr><tr><td>Célio Studart</td><td class=n>PSD</td><td class=n>57.287</td><td class=n>3,96</td></tr><tr><td>Larissa Gaspar</td><td class=n>PT</td><td class=n>46.723</td><td class=n>3,23</td></tr><tr><td>Luisa Cela</td><td class=n>PT</td><td class=n>46.302</td><td class=n>3,20</td></tr><tr><td>Emanuel Acrizio</td><td class=n>SOLIDARIEDADE</td><td class=n>42.043</td><td class=n>2,91</td></tr><tr><td>Giordanna Mano</td><td class=n>PRD</td><td class=n>38.788</td><td class=n>2,68</td></tr><tr><td>Luiz Gastão</td><td class=n>PSD</td><td class=n>35.254</td><td class=n>2,44</td></tr></tbody></table></div>
+    <h4>Senado na capital: quatro candidatos embolados</h4>
+    <p>No estado o Senado foi tranquilo pra base. Em Fortaleza não: Cid 26,6%, Luizianne 26,1%, Wagner 23,6% e Alcides 22,3%. Somando as chapas, governo 52,7% e oposição 45,9%. Um detalhe curioso: Luizianne foi prefeita de Fortaleza por oito anos e teve, proporcionalmente, menos voto na capital (26,1%) do que no estado inteiro (29,0%).</p>
+    <div class="tw"><table class=""><thead><tr><th>Senado em Fortaleza</th><th class=n>Votos</th><th class=n>%</th></tr></thead><tbody><tr><td>Cid Gomes</td><td class=n>695.723</td><td class=n>26,60</td></tr><tr><td>Luizianne</td><td class=n>683.333</td><td class=n>26,13</td></tr><tr><td>Capitão Wagner</td><td class=n>616.365</td><td class=n>23,57</td></tr><tr><td>Alcides Fernandes</td><td class=n>583.086</td><td class=n>22,30</td></tr></tbody></table></div>
+    <h4>A esquerda que não é PT mora na capital</h4>
+    <p>O PSOL é um fenômeno de Fortaleza. Gabriel Biologia foi o deputado estadual mais votado da cidade (99 mil, 7% dos válidos) e o segundo mais votado do estado (141 mil), com uns 70% dos votos vindo da capital. Renato Roseno teve 77 mil votos em Fortaleza, o segundo maior número da cidade, e mesmo assim deve ficar sem mandato pela regra da federação.</p>
+    <div class="tw"><table class=""><thead><tr><th>Estadual, mais votados na capital</th><th class=n>Partido</th><th class=n>Votos</th><th class=n>%</th></tr></thead><tbody><tr><td>Gabriel Biologia</td><td class=n>PSOL</td><td class=n>99.125</td><td class=n>6,99</td></tr><tr><td>Bella Carmelo</td><td class=n>PL</td><td class=n>78.275</td><td class=n>5,52</td></tr><tr><td>Abreu Junior</td><td class=n>PL</td><td class=n>62.056</td><td class=n>4,37</td></tr><tr><td>Tancredo Dos Santos</td><td class=n>PL</td><td class=n>58.047</td><td class=n>4,09</td></tr><tr><td>Jade Romero</td><td class=n>PT</td><td class=n>49.161</td><td class=n>3,46</td></tr><tr><td>Leo Suricate</td><td class=n>PSOL</td><td class=n>27.131</td><td class=n>1,91</td></tr><tr><td>Dra Mayra Pinheiro</td><td class=n>PL</td><td class=n>26.706</td><td class=n>1,88</td></tr><tr><td>Catanho</td><td class=n>PT</td><td class=n>24.960</td><td class=n>1,76</td></tr></tbody></table></div>
+    <h4>O que muda pra prefeitura</h4>
+    <p>Gabriella Aguiar, vice-prefeita eleita com Evandro Leitão em 2024, é a vice de Elmano. Com a reeleição do governador ela vira vice-governadora em janeiro e Fortaleza fica sem vice-prefeita. Mais importante do que isso: a cidade que o PT ganhou por um fio em 2024 votou contra o candidato do PT a governador dois anos depois. Se eu fosse do grupo do Evandro, leria esse resultado como aviso pra 2028.</p>
+  </section>
+
+  <section id="an-amapa">
+    <h3>Amapá: Furlan varreu o estado, e Lula e Flávio empataram</h3>
+    <div class="stats">
+      <div><span>Dr. Furlan (PSD)</span><b>62,75%</b><small>eleito no 1º turno</small></div>
+      <div><span>Clécio (União)</span><b>36,97%</b><small>governador, perdeu a reeleição</small></div>
+      <div><span>Lula × Flávio</span><b>225</b><small>votos de diferença no estado</small></div>
+    </div>
+    <p>Um governador perder a reeleição já no primeiro turno é raro. Clécio Luís tinha a máquina e uma coligação de 12 partidos, do PT ao Republicanos, passando pelo União Brasil de Davi Alcolumbre. Perdeu por quase 26 pontos.</p>
+    <p>Dr. Furlan saiu da prefeitura de Macapá, onde tinha sido reeleito em 2024 com 85% dos votos, ainda pelo MDB. Agora no PSD, com Novo, Podemos e PL na coligação e Luciana Gurgel de vice, ganhou em 15 dos 16 municípios. O único que escapou foi Serra do Navio, e por pouco (Clécio 50,6% a 49,3%). Em Calçoene ele passou de 71%.</p>
+    <h4>Senado: o líder do governo Lula ficou de fora</h4>
+    <p>Pro Senado o grupo de Furlan levou as duas cadeiras. Rayssa Furlan (Podemos), mulher do governador eleito, foi a mais votada com 29,98%, e Lucas Barreto (PSD) se reelegeu com 24,22%. Randolfe Rodrigues (PT), líder do governo Lula no Congresso e senador desde 2011, ficou em terceiro com 18,55% e deixa o Senado no começo de 2027.</p>
+    <p>É a derrota mais simbólica da noite pro Planalto. Randolfe é das vozes mais conhecidas do governo no Congresso. A partir de 2027 o Amapá tem uma família Furlan no governo e no Senado, e Davi Alcolumbre, que segue senador até 2031, vai ter que conviver com um grupo que acabou de derrotar o candidato do partido dele.</p>
+    <div class="tw"><table class="aps"><thead><tr><th>Município</th><th class=n>Rayssa</th><th class=n>Lucas</th><th class=n>Randolfe</th><th class=n>Acácio</th><th class=n>Alliny</th></tr></thead><tbody><tr><td>Macapá</td><td class=n>31,5</td><td class=n>25,5</td><td class=n>17,5</td><td class=n>13,2</td><td class=n>8,9</td></tr><tr><td>Santana</td><td class=n>28,7</td><td class=n>23,9</td><td class=n>17,6</td><td class=n>19,7</td><td class=n>7,9</td></tr><tr><td>Laranjal do Jari</td><td class=n>23,8</td><td class=n>18,5</td><td class=n>18,3</td><td class=n>11,6</td><td class=n>26,4</td></tr><tr><td>Oiapoque</td><td class=n>32,1</td><td class=n>23,7</td><td class=n>23,0</td><td class=n>9,8</td><td class=n>8,4</td></tr><tr><td>Mazagão</td><td class=n>24,0</td><td class=n>19,5</td><td class=n>23,9</td><td class=n>26,8</td><td class=n>4,2</td></tr><tr><td>Porto Grande</td><td class=n>30,8</td><td class=n>24,1</td><td class=n>19,0</td><td class=n>15,4</td><td class=n>8,5</td></tr><tr><td>Tartarugalzinho</td><td class=n>28,1</td><td class=n>24,8</td><td class=n>22,4</td><td class=n>10,8</td><td class=n>12,0</td></tr><tr><td>Vitória do Jari</td><td class=n>22,6</td><td class=n>22,4</td><td class=n>22,8</td><td class=n>17,3</td><td class=n>13,7</td></tr><tr><td>Pedra Branca do Amapari</td><td class=n>28,2</td><td class=n>20,4</td><td class=n>20,2</td><td class=n>17,7</td><td class=n>12,0</td></tr><tr><td>Calçoene</td><td class=n>33,7</td><td class=n>22,0</td><td class=n>21,0</td><td class=n>15,8</td><td class=n>6,3</td></tr><tr><td>Itaubal</td><td class=n>27,9</td><td class=n>18,1</td><td class=n>22,8</td><td class=n>12,0</td><td class=n>18,3</td></tr><tr><td>Ferreira Gomes</td><td class=n>32,0</td><td class=n>25,6</td><td class=n>19,1</td><td class=n>12,2</td><td class=n>9,4</td></tr><tr><td>Amapá</td><td class=n>27,3</td><td class=n>21,6</td><td class=n>22,3</td><td class=n>13,2</td><td class=n>14,4</td></tr><tr><td>Cutias</td><td class=n>28,9</td><td class=n>26,5</td><td class=n>18,6</td><td class=n>20,6</td><td class=n>4,4</td></tr><tr><td>Serra do Navio</td><td class=n>23,7</td><td class=n>21,2</td><td class=n>16,8</td><td class=n>28,8</td><td class=n>7,5</td></tr><tr><td>Pracuúba</td><td class=n>28,3</td><td class=n>21,0</td><td class=n>23,5</td><td class=n>8,5</td><td class=n>17,9</td></tr></tbody></table></div>
+    <h4>Presidente: 225 votos</h4>
+    <p>Lula teve 212.503 votos e Flávio 212.278. É empate de verdade, 0,04 ponto. A divisão é geográfica e bem nítida. Flávio ganhou em Macapá (47,2% a 43,3%, mais 10.199 votos) e em Santana (mais 6.512). Lula ganhou em 12 dos outros 14 municípios e tirou uns 17 mil de lá, puxado por Mazagão, Oiapoque, Laranjal do Jari e Vitória do Jari.</p>
+    <p>O que mais me chama atenção é a distância entre o voto pra governador e o voto pra presidente. Furlan teve 281.595 votos, Flávio 212.278. Pelo menos 69 mil eleitores votaram em Furlan e não em Flávio, então Furlan pegou muito voto de quem é Lula. No Amapá a eleição de governador foi sobre o Amapá, não sobre esquerda e direita.</p>
+    <div class="tw"><table class="ap"><thead><tr><th>Município</th><th class=n>Eleitores</th><th class=n>Lula × Flávio</th><th class=n>Saldo Lula</th><th class=n>Furlan %</th><th class=n>Abstenção %</th></tr></thead><tbody><tr><td>Macapá</td><td class=n>321.597</td><td class=n><span class="duo"><i class="lula" style="width:43.3%"></i><i class="flavio" style="width:47.2%"></i></span></td><td class=n><span class="flavio-t">−10.199</span></td><td class=n>65,5</td><td class=n>15,9</td></tr><tr><td>Santana</td><td class=n>85.900</td><td class=n><span class="duo"><i class="lula" style="width:41.0%"></i><i class="flavio" style="width:50.1%"></i></span></td><td class=n><span class="flavio-t">−6.512</span></td><td class=n>58,8</td><td class=n>14,8</td></tr><tr><td>Laranjal do Jari</td><td class=n>28.170</td><td class=n><span class="duo"><i class="lula" style="width:52.3%"></i><i class="flavio" style="width:40.8%"></i></span></td><td class=n><span class="lula-t">+2.362</span></td><td class=n>56,1</td><td class=n>25,0</td></tr><tr><td>Oiapoque</td><td class=n>24.220</td><td class=n><span class="duo"><i class="lula" style="width:57.8%"></i><i class="flavio" style="width:36.1%"></i></span></td><td class=n><span class="lula-t">+3.683</span></td><td class=n>65,7</td><td class=n>27,7</td></tr><tr><td>Mazagão</td><td class=n>22.212</td><td class=n><span class="duo"><i class="lula" style="width:59.5%"></i><i class="flavio" style="width:34.3%"></i></span></td><td class=n><span class="lula-t">+4.690</span></td><td class=n>55,1</td><td class=n>14,5</td></tr><tr><td>Porto Grande</td><td class=n>15.533</td><td class=n><span class="duo"><i class="lula" style="width:48.0%"></i><i class="flavio" style="width:44.1%"></i></span></td><td class=n><span class="lula-t">+470</span></td><td class=n>61,3</td><td class=n>20,6</td></tr><tr><td>Tartarugalzinho</td><td class=n>11.437</td><td class=n><span class="duo"><i class="lula" style="width:52.3%"></i><i class="flavio" style="width:42.3%"></i></span></td><td class=n><span class="lula-t">+901</span></td><td class=n>56,1</td><td class=n>18,9</td></tr><tr><td>Vitória do Jari</td><td class=n>10.405</td><td class=n><span class="duo"><i class="lula" style="width:61.0%"></i><i class="flavio" style="width:33.8%"></i></span></td><td class=n><span class="lula-t">+2.156</span></td><td class=n>51,5</td><td class=n>22,4</td></tr><tr><td>Pedra Branca do Amapari</td><td class=n>9.909</td><td class=n><span class="duo"><i class="lula" style="width:50.2%"></i><i class="flavio" style="width:43.5%"></i></span></td><td class=n><span class="lula-t">+466</span></td><td class=n>58,0</td><td class=n>28,2</td></tr><tr><td>Calçoene</td><td class=n>8.907</td><td class=n><span class="duo"><i class="lula" style="width:50.6%"></i><i class="flavio" style="width:41.2%"></i></span></td><td class=n><span class="lula-t">+644</span></td><td class=n>71,7</td><td class=n>21,3</td></tr><tr><td>Itaubal</td><td class=n>8.881</td><td class=n><span class="duo"><i class="lula" style="width:50.4%"></i><i class="flavio" style="width:43.0%"></i></span></td><td class=n><span class="lula-t">+539</span></td><td class=n>60,0</td><td class=n>17,2</td></tr><tr><td>Ferreira Gomes</td><td class=n>7.861</td><td class=n><span class="duo"><i class="lula" style="width:45.6%"></i><i class="flavio" style="width:47.2%"></i></span></td><td class=n><span class="flavio-t">−101</span></td><td class=n>66,3</td><td class=n>20,4</td></tr><tr><td>Amapá</td><td class=n>7.523</td><td class=n><span class="duo"><i class="lula" style="width:55.3%"></i><i class="flavio" style="width:37.2%"></i></span></td><td class=n><span class="lula-t">+1.102</span></td><td class=n>57,1</td><td class=n>16,8</td></tr><tr><td>Cutias</td><td class=n>6.300</td><td class=n><span class="duo"><i class="lula" style="width:51.9%"></i><i class="flavio" style="width:41.7%"></i></span></td><td class=n><span class="lula-t">+520</span></td><td class=n>62,6</td><td class=n>17,6</td></tr><tr><td>Serra do Navio</td><td class=n>4.111</td><td class=n><span class="duo"><i class="lula" style="width:35.5%"></i><i class="flavio" style="width:57.0%"></i></span></td><td class=n><span class="flavio-t">−639</span></td><td class=n>49,3</td><td class=n>26,1</td></tr><tr><td>Pracuúba</td><td class=n>4.022</td><td class=n><span class="duo"><i class="lula" style="width:49.4%"></i><i class="flavio" style="width:45.0%"></i></span></td><td class=n><span class="lula-t">+143</span></td><td class=n>55,5</td><td class=n>17,6</td></tr></tbody></table></div>
+    <h4>Bancadas: Furlan começa em minoria no papel</h4>
+    <p>Aqui tem um contraste grande. Dos 8 deputados federais, só 2 são de partidos da coligação de Furlan (Dra. Érica, do Podemos, e Vinícius Gurgel, do PL). Na Assembleia são 5 de 24. A federação União/PP fez a maior bancada estadual (6), o Republicanos fez 5 e o PDT 3, todos do lado de Clécio na eleição.</p>
+    <p>Na prática duvido que essa oposição sobreviva ao primeiro semestre. A política do Amapá tem tradição de gravitar em volta de quem tem a caneta, e um governador eleito com 63% tem poder de atração. Mas o número de partida é esse, e Furlan vai precisar negociar desde o primeiro dia.</p>
+    <p>Um detalhe que salta da lista: o sobrenome Gurgel aparece na vice-governadoria (Luciana), em duas vagas de deputado federal (Aline, pelo União, e Vinícius, pelo PL) e numa estadual (Hildegard, Republicanos). Não vou afirmar o parentesco de cada um sem checar, mas o nome está dos dois lados da disputa. Felipe Show (União) foi o federal mais votado, com 34.587 votos.</p>
+    <details class="an-more"><summary>Bancada federal do Amapá (8 vagas, oficial)</summary><div class="tw"><table class="banc"><thead><tr><th>Partido / federação</th><th class=n>Lado</th><th class=n>Votos</th><th class=n>Vagas</th><th class=n>Eleitos</th></tr></thead><tbody><tr><td>UNIÃO/PP</td><td class=n><span class="tag opo">outros</span></td><td class=n>125.443</td><td class=n>3</td><td class=n>Felipe Show, Aline Gurgel, Marcio Serrão</td></tr><tr><td>PDT</td><td class=n><span class="tag opo">outros</span></td><td class=n>84.676</td><td class=n>2</td><td class=n>Josenildo, Dorinaldo Malafaia</td></tr><tr><td>PODE</td><td class=n><span class="tag gov">Furlan</span></td><td class=n>81.478</td><td class=n>1</td><td class=n>Dra. Erica</td></tr><tr><td>PT/PC do B/PV</td><td class=n><span class="tag opo">outros</span></td><td class=n>69.825</td><td class=n>1</td><td class=n>Professora Marcivânia</td></tr><tr><td>PL</td><td class=n><span class="tag gov">Furlan</span></td><td class=n>56.849</td><td class=n>1</td><td class=n>Vinicius Gurgel</td></tr></tbody></table></div></details>
+    <details class="an-more"><summary>Assembleia do Amapá (24 vagas, oficial)</summary><div class="tw"><table class="banc"><thead><tr><th>Partido / federação</th><th class=n>Lado</th><th class=n>Votos</th><th class=n>Vagas</th><th class=n>Eleitos</th></tr></thead><tbody><tr><td>UNIÃO/PP</td><td class=n><span class="tag opo">outros</span></td><td class=n>99.359</td><td class=n>6</td><td class=n>Rodolfo Vale, Bia Pombo, Jorge Amanajas, Roberto Góes, Joselyo Mais Saúde, Aparecida Salomão</td></tr><tr><td>REPUBLICANOS</td><td class=n><span class="tag opo">outros</span></td><td class=n>85.434</td><td class=n>5</td><td class=n>Hildegard Gurgel, Kinovak, Telma Nery, Jaime Perez, Coronel Flexa</td></tr><tr><td>PDT</td><td class=n><span class="tag opo">outros</span></td><td class=n>52.953</td><td class=n>3</td><td class=n>João Pedro, Jack Jk, Aldilene Souza</td></tr><tr><td>PSD</td><td class=n><span class="tag gov">Furlan</span></td><td class=n>40.340</td><td class=n>2</td><td class=n>Franco, Lorran Barreto</td></tr><tr><td>PSOL/REDE</td><td class=n><span class="tag opo">outros</span></td><td class=n>38.497</td><td class=n>2</td><td class=n>Dr. Victor Amoras, Fabricio Furlan</td></tr><tr><td>PODE</td><td class=n><span class="tag gov">Furlan</span></td><td class=n>38.248</td><td class=n>2</td><td class=n>R Nelson, João Mendonça</td></tr><tr><td>MDB</td><td class=n><span class="tag opo">outros</span></td><td class=n>35.122</td><td class=n>2</td><td class=n>Diogo Senior, Junior Favacho</td></tr><tr><td>PL</td><td class=n><span class="tag gov">Furlan</span></td><td class=n>27.641</td><td class=n>1</td><td class=n>Alex</td></tr><tr><td>PT/PC do B/PV</td><td class=n><span class="tag opo">outros</span></td><td class=n>23.941</td><td class=n>1</td><td class=n>Socorro Nogueira</td></tr></tbody></table></div></details>
+    <h4>Macapá e o interior</h4>
+    <p>Macapá tem 56% do eleitorado do estado. Furlan fez 65,5% na cidade que governava, bem abaixo dos 85% de 2024. Ainda é muito, só que mostra que ser candidato a governador custa mais do que ser prefeito bem avaliado. A abstenção no interior foi alta: 28,2% em Pedra Branca do Amapari, 27,7% em Oiapoque, 26,1% em Serra do Navio e 25,0% em Laranjal do Jari, contra 15,9% em Macapá. Meu palpite é distância e transporte, porque em vários desses lugares chegar na seção não é simples. Não tenho como provar só com esses dados.</p>
+  </section>
+
+  <section id="an-brancos">
+    <h3>Brancos, nulos e quem ficou em casa</h3>
+    <p>No Brasil, 1,84% votaram em branco e 2,93% anularam o voto pra presidente. Abstenção de 20,96%, ou seja, 33,3 milhões de eleitores não foram votar. É mais de 13 vezes a diferença entre Flávio e Lula. O segundo turno vai ser decidido em boa parte aí.</p>
+    <p>O caso mais estranho é o Senado no Ceará. Somando brancos (7,18%) e nulos (10,55%), quase 18% dos votos pro Senado não foram pra ninguém, uns 2 milhões de votos. A explicação mais provável é simples: cada eleitor tinha dois votos e muita gente só sabia em quem votar no primeiro.</p>
+    <p>Pra governador o voto nulo também cresce. No Ceará foram 324 mil nulos pra governador contra 186 mil pra presidente, uns 138 mil eleitores que votaram em alguém pra presidente e se recusaram a escolher entre Elmano e Ciro. No Amapá a mesma coisa em escala menor: 24 mil nulos pra governador contra 7 mil pra presidente.</p>
+    <p>O Ceará tem a menor abstenção dessas disputas (15,3% no estado, 13,0% em Fortaleza), bem abaixo da média nacional. Eleição local disputada leva gente pra urna.</p>
+    <div class="tw"><table class="bn"><thead><tr><th>Disputa</th><th class=n>Brancos</th><th class=n>Nulos</th><th class=n>Abstenção</th></tr></thead><tbody><tr><td>Presidente · Brasil</td><td class=n>1,84%</td><td class=n>2,93%</td><td class=n>20,96%</td></tr><tr><td>Presidente · Ceará</td><td class=n>1,75%</td><td class=n>3,20%</td><td class=n>15,26%</td></tr><tr><td>Governador · Ceará</td><td class=n>2,89%</td><td class=n>5,57%</td><td class=n>15,27%</td></tr><tr><td>Senado · Ceará*</td><td class=n>7,18%</td><td class=n>10,55%</td><td class=n>15,27%</td></tr><tr><td>Dep. federal · Ceará</td><td class=n>4,02%</td><td class=n>2,51%</td><td class=n>15,27%</td></tr><tr><td>Dep. estadual · Ceará</td><td class=n>4,76%</td><td class=n>2,89%</td><td class=n>15,27%</td></tr><tr><td>Presidente · Fortaleza</td><td class=n>1,72%</td><td class=n>2,86%</td><td class=n>13,02%</td></tr><tr><td>Governador · Fortaleza</td><td class=n>2,92%</td><td class=n>5,12%</td><td class=n>13,03%</td></tr><tr><td>Senado · Fortaleza*</td><td class=n>6,83%</td><td class=n>9,21%</td><td class=n>13,03%</td></tr><tr><td>Presidente · Amapá</td><td class=n>0,93%</td><td class=n>1,53%</td><td class=n>17,41%</td></tr><tr><td>Governador · Amapá</td><td class=n>0,62%</td><td class=n>5,11%</td><td class=n>17,41%</td></tr><tr><td>Senado · Amapá*</td><td class=n>2,39%</td><td class=n>4,84%</td><td class=n>17,41%</td></tr><tr><td>Presidente · Macapá</td><td class=n>1,03%</td><td class=n>1,49%</td><td class=n>15,88%</td></tr><tr><td>Governador · Macapá</td><td class=n>0,59%</td><td class=n>4,42%</td><td class=n>15,88%</td></tr></tbody></table></div>
+    <p class="an-foot">* No Senado cada eleitor tem dois votos. Brancos e nulos estão sobre o total de votos, e a abstenção sobre o eleitorado.</p>
+  </section>
+
+  <section id="an-turno">
+    <h3>Daqui até 25 de outubro</h3>
+    <p>A conta é fácil de fazer e difícil pro PT. Flávio precisa de mais 2,87 pontos pra passar de 50%. Lula precisa de 4,96. Fora os dois, sobraram 7,83% dos válidos, e a maior parte foi pra candidatos de direita ou centro-direita: Renan Santos, Caiado e Zema somam 4,71%. Augusto Cury tem 2,90% e é o voto mais solto. A esquerda pequena (UP, PSTU, PCB, PCO) não chega a 0,2%.</p>
+    <p>Pra ganhar só com quem já votou, Lula precisaria de uns 63% de todo o voto que foi pros outros candidatos. Não vejo isso acontecendo. O caminho dele é outro: tirar gente de casa, principalmente no Nordeste, e virar votos em Minas. Flávio entra como favorito. Não é jogo jogado, porque segundo turno sempre muda a cara da eleição, mas quem está atrás é Lula.</p>
+    <p>No Ceará, com governador e senadores definidos, a única disputa é a presidencial. O PT vai tentar repetir ou passar dos 63% de Lula, e Fortaleza é onde há mais voto pra buscar. No Amapá a coisa é mais aberta do que em qualquer outro lugar do país. Empate de 225 votos, governador eleito com o PL na coligação e Randolfe derrotado. Se Furlan entrar de cabeça na campanha de Flávio, acho difícil Lula ganhar lá.</p>
+  </section>
+
+  <section class="an-method">
+    <h3>Como fiz essa análise</h3>
+    <p>Todos os números vêm dos arquivos públicos do TSE (resultados.tse.jus.br), baixados por volta de 21h38 de 4 de outubro, quando o Brasil tinha 99,5% das seções apuradas, o Ceará 98,4% e o Amapá 100%. Os resultados por município são os mesmos arquivos, cidade por cidade. As comparações com 2024 usam os arquivos oficiais da eleição municipal. Os números de 2022 são de memória e eu só uso os que tenho certeza.</p>
+    <p>As bancadas do Ceará são projeção. Reproduzi a regra de distribuição de vagas (quociente eleitoral, quociente partidário, a barreira de 80% e 20% pras sobras, e a disputa por médias) e testei no Amapá, que já está fechado: bateu cadeira por cadeira com o resultado oficial, federal e estadual. Mesmo assim, com 1,6% ainda por apurar, uma vaga na beirada pode mudar. A confirmação aparece nas abas Ceará e Fortaleza quando o TSE marcar os eleitos.</p>
+    <p>Não tive acesso a pesquisa de boca de urna nem ao noticiário da campanha das últimas semanas. Quando digo por que alguém votou de um jeito, é leitura dos números, não fato apurado.</p>
+  </section>
+</article>
+
 <footer>Dados oficiais do TSE (resultados.tse.jus.br), atualização automática a cada 30 s. Toque no horário para atualizar na hora.</footer>
 
 <script>
@@ -162,16 +350,33 @@ footer a { color: var(--accent); }
     dece:  { ele: ELE.est, uf: 'ce', cargo: 7, title: 'Dep. Estadual', where: 'Ceará' },
     dfap:  { ele: ELE.est, uf: 'ap', cargo: 6, title: 'Dep. Federal', where: 'Amapá' },
     deap:  { ele: ELE.est, uf: 'ap', cargo: 7, title: 'Dep. Estadual', where: 'Amapá' },
+    presce: { ele: ELE.fed, uf: 'ce', cargo: 1, title: 'Presidente', where: 'no Ceará' },
+    presap: { ele: ELE.fed, uf: 'ap', cargo: 1, title: 'Presidente', where: 'no Amapá' },
   };
+  // Municípios: código do TSE (5 dígitos), não o do IBGE
+  const CIDADES = { fortaleza: ['ce', '13897', 'Fortaleza'], macapa: ['ap', '06050', 'Macapá'] };
+  for (const [id, [uf, mun, nome]] of Object.entries(CIDADES)) {
+    RACES[id + '_pres'] = { ele: ELE.fed, uf, mun, cargo: 1, title: 'Presidente', where: 'em ' + nome };
+    RACES[id + '_gov'] = { ele: ELE.est, uf, mun, cargo: 3, title: 'Governador', where: 'em ' + nome };
+    RACES[id + '_sen'] = { ele: ELE.est, uf, mun, cargo: 5, title: 'Senado', where: 'em ' + nome };
+    RACES[id + '_df'] = { ele: ELE.est, uf, mun, cargo: 6, title: 'Dep. Federal', where: 'em ' + nome };
+    RACES[id + '_de'] = { ele: ELE.est, uf, mun, cargo: 7, title: 'Dep. Estadual', where: 'em ' + nome };
+  }
   const TABS = {
     resumo: [['pres', 5], ['govce', 4], ['govap', 4], ['sence', 4], ['senap', 4]],
-    ce: [['govce', 99], ['sence', 99], ['dfce'], ['dece']],
-    ap: [['govap', 99], ['senap', 99], ['dfap'], ['deap']],
+    ce: [['govce', 99], ['sence', 99], ['presce', 5], ['dfce'], ['dece']],
+    fortaleza: [['fortaleza_pres', 5], ['fortaleza_gov', 99], ['fortaleza_sen', 99], ['fortaleza_df'], ['fortaleza_de']],
+    ap: [['govap', 99], ['senap', 99], ['presap', 5], ['dfap'], ['deap']],
+    macapa: [['macapa_pres', 5], ['macapa_gov', 99], ['macapa_sen', 99], ['macapa_df'], ['macapa_de']],
+    analise: [],
   };
 
   const pad = (n, l) => String(n).padStart(l, '0');
-  const fileUrl = r => `${BASE}/${r.ele}/dados/${r.uf}/${r.uf}-c${pad(r.cargo, 4)}-e${pad(r.ele, 6)}-u.json`;
-  const fotoUrl = (r, sq) => `${BASE}/${r.ele}/fotos/${r.uf}/${sq}.jpeg`;
+  const fileUrl = r => `${BASE}/${r.ele}/dados/${r.uf}/${r.uf}${r.mun || ''}-c${pad(r.cargo, 4)}-e${pad(r.ele, 6)}-u.json`;
+  const fotoUrl = (r, sq) => `${BASE}/${r.ele}/fotos/${r.cargo === 1 ? 'br' : r.uf}/${sq}.jpeg`;
+  const curto = n => n >= 1e6 ? (n / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi'
+    : n >= 1e5 ? Math.round(n / 1e3) + ' mil' : fmt(n);
+  const pc = (a, b) => (b ? (100 * a / b) : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const num = s => Number(String(s || '0').replace(/\./g, '').replace(',', '.')) || 0;
   const fmt = n => n.toLocaleString('pt-BR');
   const pct = s => (s || '0,00');
@@ -207,6 +412,7 @@ footer a { color: var(--accent); }
       hg: d.hg || '',
       final: d.tf === 's',
       validos: num(d.v && d.v.vv), brancos: num(d.v && d.v.vb), nulos: num(d.v && d.v.tvn),
+      totalVotos: num(d.v && d.v.tv),
       comparec: num(d.e && d.e.c), eleitores: num(d.e && d.e.te), abst: num(d.e && d.e.a),
     };
   }
@@ -240,6 +446,19 @@ footer a { color: var(--accent); }
       <div class="prog"><i style="width:${d ? Math.min(100, d.apurN) : 0}%"></i></div>${extra}`;
   }
 
+  // Válidos, brancos e nulos sobre o total de votos; abstenção sobre o eleitorado.
+  // No Senado cada eleitor tem dois votos, então o total de votos é o dobro do comparecimento.
+  function turnout(r, d) {
+    if (!d.totalVotos && !d.comparec) return '';
+    const dois = d.totalVotos > d.comparec * 1.5;
+    return `<div class="turn">
+      <div><span>Válidos</span><b>${pc(d.validos, d.totalVotos)}%</b><small>${curto(d.validos)}</small></div>
+      <div><span>Brancos</span><b>${pc(d.brancos, d.totalVotos)}%</b><small>${curto(d.brancos)}</small></div>
+      <div><span>Nulos</span><b>${pc(d.nulos, d.totalVotos)}%</b><small>${curto(d.nulos)}</small></div>
+      <div><span>Abstenção</span><b>${pc(d.abst, d.eleitores)}%</b><small>${curto(d.abst)}</small></div>
+    </div>${dois ? '<div class="turn-note">Dois votos por eleitor para o Senado, por isso o total passa do número de eleitores que foram votar.</div>' : ''}`;
+  }
+
   function majCard(key, limit) {
     const r = RACES[key], s = store[key], d = s && s.data;
     if (!d) return `<section class="card">${header(r, null)}<p class="meta">${s && s.err ? 'Sem resposta do TSE (' + esc(s.err) + ')' : 'Carregando…'}</p></section>`;
@@ -264,7 +483,7 @@ footer a { color: var(--accent); }
     const more = d.cands.length > limit
       ? `<button class="more" type="button" data-more="${key}">${open ? 'Mostrar menos' : `Ver todos (${d.cands.length})`}</button>` : '<div style="height:8px"></div>';
     const m = `<div class="meta">${meta}TSE ${esc(d.quando)}${d.final ? ' · totalização encerrada' : ''}${s.err ? ' · ⚠ última tentativa falhou' : ''}</div>`;
-    return `<section class="card">${header(r, d, m)}${rows}${more}</section>`;
+    return `<section class="card">${header(r, d, m)}${turnout(r, d)}${rows}${more}</section>`;
   }
 
   function depCard(key) {
@@ -277,6 +496,7 @@ footer a { color: var(--accent); }
       ? ranked.filter(c => (c.nm + ' ' + c.full + ' ' + c.sg + ' ' + c.n).toLowerCase().includes(q))
       : (open ? ranked : ranked.slice(0, d.seats + 5));
     const started = d.apurN > 0 || d.cands.some(c => c.v > 0);
+    const local = !!r.mun;
     const parties = Object.entries(d.partyVotes).sort((a, b) => b[1] - a[1]).slice(0, 8);
     const eleitosPorPartido = {};
     d.cands.forEach(c => { if (c.e) eleitosPorPartido[c.sg] = (eleitosPorPartido[c.sg] || 0) + 1; });
@@ -284,7 +504,7 @@ footer a { color: var(--accent); }
       ? `<div class="parties">${parties.map(([sg, v]) => `<span>${esc(sg)} ${fmt(v)}${eleitosPorPartido[sg] ? ` · <b>${eleitosPorPartido[sg]} eleitos</b>` : ''}</span>`).join('')}</div>` : '';
     let rows = '';
     list.forEach(c => {
-      if (!q && c.rank === d.seats + 1 && started) rows += `<div class="cut">${d.seats} vagas · abaixo daqui, fora pelo voto nominal</div>`;
+      if (!q && !local && c.rank === d.seats + 1 && started) rows += `<div class="cut">${d.seats} vagas · abaixo daqui, fora pelo voto nominal</div>`;
       rows += `<div class="dep${c.e ? ' eleito' : ''}">
         <div class="rk">${c.rank}º</div>
         <div><div class="nm">${esc(c.nm)}${pillFor(c)}</div><div class="sub">${esc(c.sg)} ${esc(c.n)}</div></div>
@@ -294,16 +514,20 @@ footer a { color: var(--accent); }
     if (!rows) rows = `<p class="meta">Nenhum candidato com "${esc(q)}".</p>`;
     const more = !q && d.cands.length > d.seats + 5
       ? `<button class="more" type="button" data-more="${key}">${open ? 'Mostrar menos' : `Ver todos (${d.cands.length})`}</button>` : '<div style="height:8px"></div>';
-    const m = `<div class="meta">${d.seats} vagas · TSE ${esc(d.quando)}${s.err ? ' · ⚠ última tentativa falhou' : ''}</div>`;
-    return `<section class="card">${header(r, d, m)}
+    const m = `<div class="meta">${local ? 'Votos só nesta cidade, a vaga é decidida no estado inteiro' : d.seats + ' vagas'} · TSE ${esc(d.quando)}${s.err ? ' · ⚠ última tentativa falhou' : ''}</div>`;
+    return `<section class="card">${header(r, d, m)}${turnout(r, d)}
       ${partyHtml}
       <input class="search" id="busca-${key}" type="search" inputmode="search" placeholder="Buscar nome, partido ou número" value="${esc(ui.search[key] || '')}" data-search="${key}">
-      <div class="legend">Ordem pelos votos do candidato. Quem leva a vaga depende do quociente do partido, então o selo verde só aparece quando o TSE confirma.</div>
+      <div class="legend">Ordem pelos votos do candidato${local ? ' nesta cidade' : ''}. Quem leva a vaga depende do quociente do partido no estado, então o selo verde só aparece quando o TSE confirma.</div>
       ${rows}${more}</section>`;
   }
 
   function render() {
     const main = document.getElementById('main');
+    const art = document.getElementById('analise');
+    main.hidden = tab === 'analise';
+    if (art) art.hidden = tab !== 'analise';
+    if (tab === 'analise') { updateStatus(); return; }
     const active = document.activeElement;
     const focusId = active && active.id;
     const caret = active && active.selectionStart;
@@ -328,12 +552,13 @@ footer a { color: var(--accent); }
     const latest = ok.map(s => s.data.hg).sort().pop();
     const left = Math.max(0, Math.round((nextAt - Date.now()) / 1000));
     const el = document.getElementById('status');
+    if (tab === 'analise') { el.innerHTML = 'retrato do 1º turno<br>números de 4/10, 21h38'; document.getElementById('refresh').classList.remove('spin'); return; }
     el.innerHTML = busy ? 'atualizando…' : `TSE <b>${latest || '--:--'}</b><br>de novo em ${left}s`;
     document.getElementById('refresh').classList.toggle('spin', busy);
   }
 
   async function refresh() {
-    if (busy) return;
+    if (busy || tab === 'analise') return;
     busy = true; updateStatus();
     const keys = [...new Set(TABS[tab].map(([k]) => k))];
     await Promise.all(keys.map(load));
