@@ -36,14 +36,14 @@
   :root:not([data-theme="light"]) {
     --bg: #0d1424; --card: #16203a; --ink: #e8edf6; --muted: #98a5bd; --line: #26324f;
     --accent: #7fa6ef; --bar: #2a3d66; --confirma: #3cc27a; --corrige: #f0954a; --chip: #22304f;
-    --lula: #ef6a5f; --flavio: #6f9cf0;
+    --lula: #e8574c; --flavio: #5b8de8;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1424; --card: #16203a; --ink: #e8edf6; --muted: #98a5bd; --line: #26324f;
   --accent: #7fa6ef; --bar: #2a3d66; --confirma: #3cc27a; --corrige: #f0954a; --chip: #22304f;
-  --lula: #ef6a5f; --flavio: #6f9cf0;
+  --lula: #e8574c; --flavio: #5b8de8;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -178,6 +178,86 @@ table.banc td:last-child { white-space: normal; text-align: left; min-width: 180
 .an-foot { font-size: .78rem; color: var(--muted); }
 .an-method p { font-size: .9rem; color: var(--muted); }
 
+/* análise 2027-2030 */
+.an-old { margin-top: 30px; border-top: 1px solid var(--line); padding-top: 8px; }
+.an-old > summary { font: 700 1.05rem var(--font-body); color: var(--accent); cursor: pointer; padding: 8px 0; }
+.an-old-body section { border-top: 0; margin-top: 10px; }
+.callout { background: var(--chip); border-radius: 10px; padding: 10px 12px; font-size: .92rem; margin: 12px 0; }
+.sim { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 12px 0; display: grid; gap: 12px; }
+.sim-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-presets button { font: 600 .85rem var(--font-body); border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+.sim-bar { position: relative; display: flex; gap: 2px; height: 16px; border-radius: 4px; overflow: hidden; background: var(--chip); }
+.sim-bar i { display: block; height: 100%; transition: width .3s; }
+.sim-bar i.lula { background: var(--lula); } .sim-bar i.flavio { background: var(--flavio); }
+.sim-mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+.sim-nums { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 8px; margin-top: 6px; }
+.sim-nums span { display: block; font: 600 .7rem var(--font-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.sim-nums b { font: 700 1.6rem/1 var(--font-num); font-variant-numeric: tabular-nums; }
+.sim-nums .r { text-align: right; }
+.sim-win { text-align: center; }
+.sim-win b { display: block; font: 700 1.1rem var(--font-num); text-transform: uppercase; }
+.sim-win small { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sim-reg { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .76rem; color: var(--muted); margin-top: 8px; font-variant-numeric: tabular-nums; }
+.sim-reg b { color: var(--ink); font-weight: 600; }
+.sim-ctl { display: grid; gap: 2px; }
+.sim-ctl label { font-size: .85rem; display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.sim-ctl output { font: 700 .95rem var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sim-ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.cong { display: grid; gap: 14px; margin: 12px 0; }
+.cg-h { display: flex; justify-content: space-between; align-items: baseline; font-size: .9rem; }
+.cg-h span { color: var(--muted); font-size: .8rem; }
+.cg-bar { position: relative; display: flex; gap: 2px; height: 26px; margin: 6px 0 22px; }
+.cg-bar i { display: block; height: 100%; }
+.cg-bar i:first-child { border-radius: 4px 0 0 4px; } .cg-bar i:nth-child(3) { border-radius: 0 4px 4px 0; }
+.cg-bar i.lula, .cg-lg i.lula { background: var(--lula); } .cg-bar i.flavio, .cg-lg i.flavio { background: var(--flavio); }
+.cg-bar i.centro, .cg-lg i.centro { background: var(--bar); }
+.cg-bar s { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); text-decoration: none; }
+.cg-bar s em { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); font: 600 .62rem var(--font-body); font-style: normal; color: var(--muted); white-space: nowrap; margin-top: 3px; }
+.cg-bar s:nth-of-type(2) em { top: auto; bottom: 100%; margin: 0 0 3px; }
+.cg-lg { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.cg-lg i, .lg { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.legend-row { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .8rem; color: var(--muted); margin: 8px 0; }
+.lg.hist { background: var(--ink); height: 2px; vertical-align: 3px; }
+.lg.focus { height: 0; border-top: 2px dashed var(--muted); vertical-align: 3px; border-radius: 0; }
+.lg.lula { background: var(--lula); height: 3px; vertical-align: 3px; } .lg.flavio { background: var(--flavio); height: 3px; vertical-align: 3px; }
+.lg.band { background: var(--chip); border: 1px solid var(--line); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+.chart { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 8px 4px; min-width: 0; }
+.chart figcaption { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 0 4px 4px; }
+.chart figcaption b { font: 700 1rem var(--font-num); text-transform: uppercase; letter-spacing: .03em; }
+.chart figcaption span { font-size: .72rem; color: var(--muted); }
+.cv { position: relative; }
+.cv svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.cv .gr { stroke: var(--line); stroke-width: 1; }
+.cv .now { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.cv .ax { fill: var(--muted); font: 500 9px var(--font-body); font-variant-numeric: tabular-nums; }
+.cv .end { fill: var(--ink); font: 600 9.5px var(--font-body); font-variant-numeric: tabular-nums; }
+.cv .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.cv .ln.hist { stroke: var(--ink); }
+.cv .ln.focus { stroke: var(--muted); stroke-dasharray: 4 3; }
+.cv .ln.lula { stroke: var(--lula); } .cv .ln.flavio { stroke: var(--flavio); }
+.cv .pt { stroke: var(--card); stroke-width: 2; } .cv .pt.lula { fill: var(--lula); } .cv .pt.flavio { fill: var(--flavio); }
+.cv .band-l { fill: var(--lula); opacity: .12; } .cv .band-f { fill: var(--flavio); opacity: .12; }
+.cv .cross { stroke: var(--ink); stroke-width: 1; opacity: .5; }
+.cv .hit { fill: transparent; cursor: crosshair; }
+.tip { position: absolute; top: 4px; width: 150px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: .74rem; line-height: 1.35; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,.12); font-variant-numeric: tabular-nums; }
+.tip b, .tip span { display: block; }
+.tip small { color: var(--muted); font-weight: 400; }
+table.heat td { vertical-align: top; }
+table.heat td small { display: block; font-size: .74rem; color: var(--muted); margin-top: 2px; line-height: 1.25; }
+table.heat td:not(:first-child) { min-width: 120px; }
+.hm { display: inline-block; white-space: nowrap; font: 700 .66rem var(--font-body); text-transform: uppercase; letter-spacing: .05em; padding: 2px 6px; border-radius: 4px; }
+.hm.p2 { background: var(--confirma); color: #fff; } .hm.p1 { background: color-mix(in srgb, var(--confirma) 25%, var(--card)); color: var(--ink); }
+.hm.z0 { background: var(--chip); color: var(--muted); }
+.hm.n1 { background: color-mix(in srgb, var(--corrige) 25%, var(--card)); color: var(--ink); } .hm.n2 { background: var(--corrige); color: #fff; }
+.risk { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.risk > div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 12px; }
+.risk h5 { font: 700 1.05rem var(--font-num); text-transform: uppercase; margin: 10px 0 0; }
+.risk p { font-size: .92rem; }
+.cal { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 8px; }
+.cal li { display: grid; grid-template-columns: 6.5em 1fr; gap: 10px; font-size: .94rem; }
+.cal b { font: 700 .95rem var(--font-num); color: var(--accent); }
+
 footer { font-size: .78rem; color: var(--muted); text-align: center; padding: 0 16px 24px; }
 footer a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -203,15 +283,179 @@ footer a { color: var(--accent); }
 </header>
 <main id="main"></main>
 <article id="analise" class="an" hidden>
-  <p class="an-kicker">Retrato do 1º turno · TSE, 4 de outubro, 21h38</p>
-  <h2 class="an-title">O que a urna disse no Brasil, no Ceará e no Amapá</h2>
-  <p class="an-lede">Brasil com 99,5% apurado, Ceará com 98,4%, Amapá fechado. Os números de deputado no Ceará ainda são projeção minha (explico no fim como fiz). O resto é contagem oficial, e o que for opinião está escrito como opinião.</p>
+  <p class="an-kicker">Cenários 2027-2030 · dados de 5 de outubro de 2026</p>
+  <h2 class="an-title">Lula ou Flávio: o que esperar dos próximos quatro anos</h2>
+  <p class="an-lede">Simulei o segundo turno, montei os dois governos possíveis e fui setor por setor, do juro ao preço do pão, chegando no Ceará, em Fortaleza e no Amapá. Os números de partida são oficiais (TSE e Banco Central). As projeções são minhas, feitas em cima do consenso do mercado, e eu explico cada escolha. Tudo aqui é cenário, nenhum número é promessa.</p>
 
   <nav class="an-jump" aria-label="Seções da análise">
-    <a href="#an-brasil">Brasil</a><a href="#an-ceara">Ceará</a><a href="#an-fortaleza">Fortaleza</a><a href="#an-amapa">Amapá</a><a href="#an-brancos">Brancos e nulos</a><a href="#an-turno">2º turno</a>
+    <a href="#an-turno">2º turno</a><a href="#an-ponto">Ponto de partida</a><a href="#an-congresso">Congresso</a><a href="#an-macro">Economia</a><a href="#an-setores">Setores</a><a href="#an-regiao">Ceará e Amapá</a><a href="#an-riscos">Riscos</a><a href="#an-agenda">Calendário</a>
   </nav>
 
-  <section id="an-brasil">
+  <section id="an-turno">
+    <h3>Simulação do 2º turno</h3>
+    <p>Com 99,9% das urnas apuradas, Flávio tem 47,05% dos válidos e Lula 45,13%. Sobraram 7,8% com os outros candidatos e 33,6 milhões de eleitores que não foram votar. O simulador abaixo redistribui esses votos com as regras que você escolher, região por região. Os eleitores que aparecem a mais votam como a região deles votou no primeiro turno. É uma simplificação, mas é a mais honesta que dá pra fazer sem pesquisa.</p>
+
+    <div class="sim" id="sim">
+      <div class="sim-presets" role="group" aria-label="Cenários prontos">
+        <button type="button" data-preset="flavio">Flávio vence (meu cenário central)</button>
+        <button type="button" data-preset="lula">Lula vira</button>
+        <button type="button" data-preset="zero">Zerar</button>
+      </div>
+      <div class="sim-out">
+        <div class="sim-bar" aria-hidden="true"><i class="lula" id="sim-bl"></i><i class="flavio" id="sim-bf"></i><span class="sim-mid"></span></div>
+        <div class="sim-nums">
+          <div><span>Lula</span><b class="lula-t" id="sim-l">–</b></div>
+          <div class="sim-win" id="sim-win" aria-live="polite">–</div>
+          <div class="r"><span>Flávio</span><b class="flavio-t" id="sim-f">–</b></div>
+        </div>
+        <div class="sim-reg" id="sim-reg"></div>
+      </div>
+      <div class="sim-ctl">
+        <label for="s-cl">Eleitores de Augusto Cury que vão pra Lula <output id="o-cl"></output></label>
+        <input type="range" id="s-cl" min="0" max="100" step="5">
+        <label for="s-cf">Eleitores de Augusto Cury que vão pra Flávio <output id="o-cf"></output></label>
+        <input type="range" id="s-cf" min="0" max="100" step="5">
+        <label for="s-dl">Eleitores de Renan Santos, Caiado e Zema que vão pra Lula <output id="o-dl"></output></label>
+        <input type="range" id="s-dl" min="0" max="100" step="5">
+        <label for="s-df">Eleitores de Renan Santos, Caiado e Zema que vão pra Flávio <output id="o-df"></output></label>
+        <input type="range" id="s-df" min="0" max="100" step="5">
+        <label for="s-tne">Comparecimento no Nordeste, em pontos <output id="o-tne"></output></label>
+        <input type="range" id="s-tne" min="-5" max="6" step="0.5">
+        <label for="s-tr">Comparecimento no resto do país, em pontos <output id="o-tr"></output></label>
+        <input type="range" id="s-tr" min="-5" max="6" step="0.5">
+        <label for="s-sw">Eleitores do 1º turno que trocam de lado (+ vai pra Lula, − vai pra Flávio) <output id="o-sw"></output></label>
+        <input type="range" id="s-sw" min="-5" max="5" step="0.5">
+      </div>
+    </div>
+
+    <p>O que a simulação mostra é duro pra Lula. Mesmo se ele ficar com 60% do eleitor de Cury, 25% do eleitor de Renan, Caiado e Zema e levar 4 pontos a mais de gente às urnas no Nordeste, ainda perde por pouco. Pra virar precisa também convencer uns 3% de quem votou em Flávio. E tem a história contra ele: desde 1989, quem terminou o primeiro turno presidencial na frente sempre ganhou a eleição. Em 2022 o movimento foi ao contrário: entre os dois turnos Jair Bolsonaro subiu de 43,2% pra 49,1% e Lula só de 48,4% pra 50,9%. O voto que sobra do primeiro turno costuma ir pra direita.</p>
+    <p>Meu cenário central é Flávio com uns 52%. Coloco umas 70% de chance pra ele, mais ou menos. Não é número de modelo, é leitura de quem olhou essa conta: a diferença é de 2,3 milhões de votos e quase todo o voto em disputa é de centro-direita. Mesmo assim, faltam três semanas e já vi campanha virar com menos. Por isso o resto da análise trata os dois cenários com a mesma seriedade.</p>
+  </section>
+
+  <section id="an-ponto">
+    <h3>De onde o próximo presidente parte</h3>
+    <div class="stats">
+      <div><span>Selic</span><b>13,75%</b><small>caindo desde março, era 15%</small></div>
+      <div><span>Inflação 12 meses</span><b>4,22%</b><small>agosto, teto da meta é 4,5%</small></div>
+      <div><span>Desemprego</span><b>5,3%</b><small>perto do menor da série</small></div>
+      <div><span>Dívida bruta</span><b>82,9%</b><small>do PIB, era 71,7% em 2022</small></div>
+      <div><span>Dólar</span><b>R$ 5,22</b><small>2 de outubro</small></div>
+      <div><span>PIB 2026</span><b>1,9%</b><small>projeção do mercado</small></div>
+    </div>
+    <p>Quem tomar posse em janeiro herda uma economia esquisita: o emprego vai muito bem e as contas públicas vão mal. O desemprego está em 5,3%, coisa que o Brasil quase nunca viu. A renda subiu, a isenção de IR até R$ 5 mil está valendo e o consumo segura o PIB. Do outro lado, a dívida bruta subiu 11 pontos do PIB em quatro anos e o governo ainda tem déficit primário. O juro real (Selic menos inflação esperada) passa de 8%, um dos maiores do mundo.</p>
+    <p>O mercado, antes da eleição, já esperava uma desaceleração. O Boletim Focus de 25 de setembro projeta PIB de 1,4% em 2027, desemprego voltando pra 6,5% e dívida chegando a 95% do PIB em 2030. Esse é o chão comum dos dois cenários. Nenhum dos dois candidatos vai ter os anos fáceis de 2023 e 2024.</p>
+    <p>Do lado de fora, tem o tarifaço americano: parte das exportações brasileiras paga até 37,5% pra entrar nos Estados Unidos. Os dois governos criaram um grupo de negociação no fim de setembro. E tem uma novidade que ainda ninguém precificou direito: a Petrobras achou petróleo na costa do Amapá em agosto e de novo no começo de outubro.</p>
+  </section>
+
+  <section id="an-congresso">
+    <h3>O Congresso que vem aí</h3>
+    <p>Isso pesa mais do que qualquer promessa de campanha. Contei os eleitos de 2026 nos 27 estados (nos 14 estados que ainda não tinham fechado a Câmara, usei a mesma projeção que acertou o Amapá cadeira por cadeira). O PL sai com 121 deputados, contra 99 eleitos em 2022. O PT vai a 70. No Senado, das 54 vagas em disputa, o PL levou 19, entre elas Michelle Bolsonaro no DF e Carlos Bolsonaro em Santa Catarina.</p>
+    <div class="cong" id="cong"></div>
+    <p class="an-foot">Esquerda: PT, PSB, PSOL, PCdoB, PV, PDT e Rede. Direita: PL, Novo e Missão. Centro: todo o resto (União, PSD, PP, Republicanos, MDB, Podemos, PSDB, Avante, PRD, Solidariedade). No Senado somei os 27 senadores eleitos em 2022 pelo partido com que foram eleitos, que eu lembro de cabeça. Um ou outro pode ter trocado de partido.</p>
+    <p>Ninguém governa sem o centro. Lula teria 124 deputados fiéis e precisaria de mais 133 pra ter maioria simples. Flávio teria 132 e precisaria de 125. Parece empate, só que o centro dessa vez pende pra direita. PP, União e Republicanos tiveram ministério no governo Lula e mesmo assim votaram contra ele muitas vezes, PP e União romperam com o governo em 2025, e o PSD lançou Caiado contra os dois. Na minha leitura, Flávio monta maioria pra projeto de lei em poucos meses. Lula vai ter que pagar caro por cada votação, como pagou em 2023 e 2024, agora com um PL maior no plenário.</p>
+    <p>No Senado a diferença é maior. A direita chega a uns 30 dos 81 senadores e a esquerda a 16. Com 54 votos o Senado aprova impeachment de ministro do STF. Num governo Flávio, essa conta vai estar na mesa o tempo inteiro. Num governo Lula, o Senado vira o principal freio dele, e em fevereiro de 2027 tem eleição pra presidência da casa com o PL como maior bancada.</p>
+  </section>
+
+  <section id="an-macro">
+    <h3>A economia em cada cenário</h3>
+    <p>Os gráficos mostram o que aconteceu de 2017 a 2025, a projeção do Focus até 2030 (tracejada) e os meus dois cenários. A faixa clara em volta de cada linha mostra até onde a coisa pode ir se der muito certo ou muito errado. Toque no gráfico pra ver os números de cada ano.</p>
+    <div class="legend-row" aria-hidden="true">
+      <span><i class="lg hist"></i>Histórico</span><span><i class="lg focus"></i>Mercado (Focus)</span><span><i class="lg lula"></i>Lula</span><span><i class="lg flavio"></i>Flávio</span><span><i class="lg band"></i>Faixa de risco</span>
+    </div>
+    <div class="charts" id="charts"></div>
+    <details class="an-more"><summary>Ver os números em tabela</summary><div id="chart-table"></div></details>
+
+    <h4>Como cheguei nesses números</h4>
+    <p><b>Lula.</b> Parti do Focus, que já embute a política de hoje, porque Lula é a continuidade. Puxei pra cima o dólar e o juro: o plano de governo promete manter o arcabouço fiscal mas não traz corte de gasto, e propõe o fim da escala 6x1 e ganho real do salário mínimo, que aumenta despesa e custo de mão de obra. O mercado vai cobrar isso no câmbio. Com dólar mais alto a inflação demora mais pra cair, e o Banco Central corta menos. O PIB fica um pouco acima do Focus no começo porque o governo segura a demanda com crédito público, Minha Casa Minha Vida e salário mínimo, e depois perde fôlego com juro alto. A dívida passa de 97% do PIB em 2030.</p>
+    <p><b>Flávio.</b> Aqui o primeiro efeito é de humor. Mercado gosta de nome conhecido na Fazenda (Marcelo Kayath, ex-Credit Suisse, é o mais citado), de privatização e de corte de 10 ministérios. Coloquei o dólar caindo pra perto de R$ 5,00 em 2027 e o BC acelerando os cortes. Só que 2027 cresce menos: corte de gasto esfria a economia no curto prazo e o desemprego sobe um pouco. A partir de 2028, juro menor e concessões de infraestrutura (o plano fala em R$ 900 bilhões em quatro anos) empurram o investimento e o PIB passa de 2%. A dívida sobe menos, mas ainda sobe. A proposta de baixar a alíquota do IVA custa receita, e privatização ajuda uma vez, não todo ano.</p>
+    <p><b>As faixas de risco</b> dizem mais do que as linhas. A faixa do Lula se abre pra cima no dólar, no juro e na dívida: se o arcabouço for afrouxado pra bancar promessa, dá pra ver dólar acima de R$ 6 e Selic de volta a 15%, como no fim de 2024. A faixa do Flávio é larga dos dois lados. Se der certo, juro de um dígito. Se ele levar adiante o indulto ao pai contra o STF, como prometeu na campanha, a crise institucional pode anular o ganho de confiança em semanas. Investidor gosta de reforma, mas detesta briga entre poderes.</p>
+    <div class="callout"><b>Quanto confiar nessas projeções?</b> Pouco no detalhe, bastante na direção. O próprio Focus erra a inflação do ano seguinte em mais de um ponto com frequência. O que eu sustento é o desenho: com Lula, mais emprego e consumo no curto prazo e mais pressão no câmbio e na dívida. Com Flávio, alívio financeiro rápido, crescimento mais lento no primeiro ano e risco político concentrado numa decisão só, o indulto.</div>
+  </section>
+
+  <section id="an-setores">
+    <h3>Setor por setor</h3>
+    <p>A tabela é a minha avaliação de como cada setor fica em cada cenário, comparando com o que seria o normal pra ele. Não é torcida. Tem setor que vai melhor com Lula e setor que vai melhor com Flávio, e tem setor que perde nos dois.</p>
+    <div class="tw"><table class="heat">
+      <thead><tr><th>Setor</th><th>Com Lula</th><th>Com Flávio</th></tr></thead>
+      <tbody id="heat"></tbody>
+    </table></div>
+
+    <h4>Agronegócio</h4>
+    <p>O agro vota em Flávio e vai se sentir em casa, com Ministério da Agricultura mais forte, menos atrito com fiscalização ambiental e mais segurança jurídica no campo, do jeito que o setor entende segurança jurídica. O ganho de verdade, porém, depende de juro e câmbio. Dólar mais baixo com Flávio reduz a receita em reais de quem exporta soja e carne. Com Lula o câmbio ajuda e o Plano Safra continua generoso, mas a relação política é tensa e a agenda de desmatamento líquido zero até 2030 aperta quem abre área nova. O risco grande pro agro no cenário Flávio é a China: um alinhamento automático com Trump pode custar caro pro maior comprador da soja brasileira.</p>
+    <h4>Petróleo, gás e mineração</h4>
+    <p>Os dois vão produzir mais petróleo, até porque o pré-sal não depende de quem ganha. Muda o jeito. Com Lula a Petrobras volta pra distribuição de combustível e investe em refino, o que agrada sindicato e desagrada acionista minoritário. Com Flávio a campanha diz que não privatiza a Petrobras, mas fala em estudar a venda de partes dela. Pra margem equatorial do Amapá os dois cenários são parecidos: a licença do Ibama saiu em outubro de 2025, ainda no governo Lula, e a Petrobras já achou óleo. Com Flávio o licenciamento dos outros blocos tende a andar mais rápido. Mineração e minerais críticos (lítio, terras raras) ganham mais liberdade com Flávio e mais exigência de agregação de valor com Lula.</p>
+    <h4>Indústria e comércio exterior</h4>
+    <p>Lula aposta na Nova Indústria Brasil, com crédito do BNDES, compras do governo e exigência de conteúdo local. Isso ajuda alguns segmentos (defesa, saúde, máquinas) e protege quem tem lobby. Flávio tira subsídio e baixa juro, o que ajuda a indústria pela via do crédito mais barato. O tarifaço americano pesa mais na indústria (máquinas, aço, etanol) do que no agro. É provável que um governo Flávio consiga tarifa menor com Trump, pela afinidade política, e isso vale mais pra indústria exportadora do que qualquer programa.</p>
+    <h4>Varejo, serviços e o fim da escala 6x1</h4>
+    <p>Esse é o ponto que mais muda a vida de quem tem um comércio em Fortaleza ou em Macapá. Lula propõe acabar com a escala 6x1 e baixar a jornada pra 40 horas sem cortar salário. Pro trabalhador é ganho direto de tempo. Pra supermercado, farmácia, restaurante e loja de shopping, que funcionam sete dias, é mais gente na folha pra cobrir os mesmos horários. Pela minha conta grosseira, um negócio que hoje roda em 44 horas precisaria de uns 10% a mais de horas contratadas. Repasse vai pra preço. Precisa de PEC ou lei e o Congresso que vem aí é hostil, então acho mais provável uma transição longa ou uma versão diluída. Com Flávio a 6x1 fica como está e o ganho do comércio vem do juro menor pro crediário e do IVA menor, se ele conseguir aprovar.</p>
+    <h4>Bancos, crédito e imóveis</h4>
+    <p>Bancos ganham com Flávio pela queda do juro (crédito cresce) e pela privatização do Banco do Brasil, que a coordenadora econômica da campanha já admitiu estudar. Pro cliente do BB isso pode mudar muito, principalmente no agro e no crédito consignado. Construção civil gosta dos dois: com Lula o Minha Casa Minha Vida segue grande e com subsídio, com Flávio o financiamento de mercado fica mais barato com juro menor. Pra quem quer comprar imóvel financiado, juro é o que mais pesa. Na minha leitura Flávio leva vantagem pra classe média e Lula pra faixa de renda mais baixa.</p>
+    <h4>Serviço público</h4>
+    <p>Aqui a diferença é grande. Flávio promete cortar pelo menos dez ministérios, reduzir cargos comissionados e fazer reforma administrativa. Isso significa menos concurso, reajuste menor e talvez mudança de regra pra novos servidores. Com Lula tem concurso, reajuste negociado e Estado maior. Pro Amapá, onde o contracheque público move a economia, isso é a variável mais importante dos quatro anos (falo mais disso abaixo).</p>
+    <h4>Programas sociais e renda</h4>
+    <p>Os dois prometem manter o Bolsa Família e a isenção de IR até R$ 5 mil. Flávio quer uma regra pra quem consegue emprego continuar recebendo por um tempo, o que faz sentido. Mesmo assim, num ajuste fiscal sério, revisão de cadastro e aperto na porta de entrada são os primeiros lugares onde o governo mexe. O salário mínimo é o ponto mais sensível. Com Lula segue a regra de ganho real. Flávio não prometeu manter a regra, e mexer nela é o jeito mais rápido de economizar, porque o mínimo corrige aposentadoria e BPC. No Nordeste isso pesa muito.</p>
+    <h4>Tecnologia, energia limpa e data centers</h4>
+    <p>Data center vai crescer com qualquer um, a demanda é global. Lula fala em soberania digital, supercomputador nacional e contrapartida de conteúdo local, e quer regular plataforma digital, o que as big techs não gostam. Flávio é o candidato preferido das big techs americanas. Hidrogênio verde depende de subsídio no começo, e o marco legal aprovado em 2024 prevê crédito fiscal a partir de 2028. Com Lula esse dinheiro sai. Com Flávio eu duvido que saia inteiro.</p>
+    <h4>Segurança pública e meio ambiente</h4>
+    <p>Segurança foi o tema da campanha de Flávio: endurecer pena, mais polícia, posse de arma. Lula propõe Ministério da Segurança Pública e R$ 10 bilhões pros estados. Os dois falam de crime organizado, cada um do seu jeito. No meio ambiente a diferença é clara: o desmatamento na Amazônia ficou acima de 10 mil km² por ano entre 2019 e 2022 e caiu bastante a partir de 2023. Não tenho motivo pra achar que um governo Flávio seria diferente do governo do pai nesse tema. Isso importa pro Amapá, que tem a maior parte do território preservada, e pra quem exporta pra Europa, que exige comprovação de que o produto não vem de área desmatada.</p>
+  </section>
+
+  <section id="an-regiao">
+    <h3>Ceará, Fortaleza e Amapá</h3>
+    <h4>Ceará: governador do PT, com qualquer presidente</h4>
+    <p>Elmano foi reeleito no primeiro turno com 34 dos 46 deputados estaduais na base. Com Lula, o Ceará é estado aliado com ministro forte (Camilo Santana é senador e foi ministro da Educação) e prioridade em obra federal: Transnordestina, adutoras, metrô de Fortaleza. Com Flávio, vira oposição. Os senadores Cid Gomes e Luizianne ficam do lado de lá, e a relação com Brasília passa a depender de emenda e de boa vontade.</p>
+    <p>O Pecém é o grande ativo do estado nos quatro anos. São sete pré-contratos de hidrogênio verde (Casa dos Ventos, Fortescue, EDF, Auren, Voltalia, FRV e Fuella), algo entre R$ 60 e R$ 66 bilhões, com decisão final prometida pro fim de 2026. E tem o data center da ByteDance (dona do TikTok) com a Casa dos Ventos, uns R$ 50 bilhões. O gargalo de verdade é a linha de transmissão: o ONS já negou acesso à rede pra projetos lá por questão de estabilidade. Linha de transmissão é decisão federal (MME, Aneel, leilão), então o presidente importa. Com Lula, Pecém é vitrine da transição energética e o crédito do hidrogênio sai em 2028. Com Flávio, o dinheiro privado continua interessado, mas o subsídio pode encolher. Nesse caso acho que o data center sai e parte do hidrogênio atrasa.</p>
+    <h4>Fortaleza: 2028 começa em 2027</h4>
+    <p>Evandro Leitão ganhou a prefeitura em 2024 por menos de 11 mil votos contra André Fernandes, e agora a cidade votou contra o PT pra governador. Com Lula, Evandro tem governo federal e estadual do lado, dinheiro de obra e programa social, e chega em 2028 como favorito. Com Flávio, André Fernandes (678 mil votos pra deputado, 313 mil só na capital) passa a ter o Palácio do Planalto como padrinho, e a eleição de 2028 vira a primeira grande briga do novo governo no Nordeste. Pro morador o que muda é o volume de obra federal (Minha Casa Minha Vida, mobilidade, saneamento) e o tom da relação entre prefeitura e Brasília.</p>
+    <p>Na economia da cidade, o setor mais exposto é o de serviços: comércio, bar, restaurante, hotel. A 6x1 bate aí. O turismo também sente o câmbio: dólar alto (cenário Lula) traz turista estrangeiro e segura o brasileiro aqui dentro. Dólar baixo (cenário Flávio) leva o fortalezense pra fora e encarece pouco a vinda do europeu.</p>
+    <h4>Amapá: governador alinhado com Flávio, petróleo no horizonte</h4>
+    <p>O Amapá vive de dinheiro público. Fundo de Participação, folha do estado e das prefeituras, servidores federais, ex-território. Por isso as propostas de enxugar o Estado pesam mais lá do que em quase qualquer outro lugar. Num governo Flávio, a reforma administrativa e o freio em concurso esfriam a economia de Macapá logo no começo. Furlan é aliado (o PL estava na coligação dele), e isso abre porta em Brasília pra compensar com obra e com pressa no petróleo.</p>
+    <p>O petróleo é a grande virada possível. A Petrobras achou óleo no poço Morpho, no bloco FZA-M-59, a 175 km da costa, em agosto e de novo em outubro. Entre descobrir e produzir costumam passar de cinco a oito anos, então de 2027 a 2030 o que chega é a fase de avaliação: sonda, base de apoio, empresa de serviço, gente de fora alugando casa em Macapá e Oiapoque. Royalty de verdade só depois de 2030. Com Flávio o licenciamento dos outros blocos da Foz do Amazonas tende a andar mais rápido. Com Lula anda, mas com mais atrito com a área ambiental. Um risco que vale pros dois: dinheiro de petróleo em estado pequeno, com governo muito concentrado, costuma virar problema se não tiver regra antes.</p>
+    <p>Com Lula, o Amapá vira oposição ao governo federal sem ter senador do governo: Randolfe sai em fevereiro. Davi Alcolumbre continua como o político amapaense mais forte em Brasília, e a relação dele com Furlan vai decidir quanto dinheiro federal chega.</p>
+  </section>
+
+  <section id="an-riscos">
+    <h3>Os riscos que eu acompanharia</h3>
+    <div class="risk">
+      <div><h5 class="lula-t">Se Lula ganhar</h5>
+        <p><b>Fiscal.</b> A dívida passando de 90% do PIB em 2028 com o arcabouço sendo flexibilizado. É o risco que mais pode mexer no seu bolso, via dólar e inflação.</p>
+        <p><b>Congresso hostil.</b> Uma Câmara com PL de 121 deputados e um Senado onde a direita é maior que a esquerda podem travar tudo e cobrar caro por cada votação.</p>
+        <p><b>Idade e sucessão.</b> Lula toma posse com 81 anos e não pode concorrer em 2030. A briga pela sucessão dentro do governo começa cedo e costuma paralisar decisões.</p>
+      </div>
+      <div><h5 class="flavio-t">Se Flávio ganhar</h5>
+        <p><b>Indulto e STF.</b> Ele prometeu anistia ou indulto ao pai e aos condenados do 8 de janeiro, e chegou a falar em usar a força pra garantir o cumprimento. Uma briga aberta com o STF é o que pode jogar fora todo o ganho de confiança do começo.</p>
+        <p><b>Ajuste que dói.</b> Cortar ministério, rever salário mínimo e travar concurso aprova reforma, mas derruba popularidade rápido, principalmente no Nordeste, onde ele perdeu de 63% a 31%.</p>
+        <p><b>Política externa.</b> Alinhamento com Trump ajuda com tarifa, mas China e Europa compram mais do Brasil que os Estados Unidos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="an-agenda">
+    <h3>Calendário dos próximos anos</h3>
+    <ol class="cal">
+      <li><b>25 out 2026</b>Segundo turno.</li>
+      <li><b>1º jan 2027</b>Posse. Mercado precifica a equipe econômica antes disso, já em novembro.</li>
+      <li><b>fev 2027</b>Eleição das presidências da Câmara e do Senado. Diz quem vai mandar na pauta.</li>
+      <li><b>2027</b>A CBS entra em vigor de verdade, PIS e Cofins acabam e o IPI zera pra quase tudo. Primeiro ano da reforma tributária no bolso.</li>
+      <li><b>2028</b>Eleição municipal. Primeiro teste do novo governo, com Fortaleza entre as principais disputas do país.</li>
+      <li><b>2029</b>Começa a transição do ICMS e do ISS pro IBS. Estados e municípios sentem a mudança na arrecadação.</li>
+      <li><b>2030</b>Eleição geral. Lula, se eleito agora, não pode concorrer. Flávio pode tentar a reeleição.</li>
+    </ol>
+  </section>
+
+  <section class="an-method">
+    <h3>Fontes e limites</h3>
+    <p>Resultados: arquivos públicos do TSE, baixados em 5 de outubro com 99,9% das urnas apuradas. Economia: séries do Banco Central (Selic, IPCA, dólar, dívida bruta, desemprego da PNAD, PIB) e Boletim Focus de 25 de setembro de 2026. Propostas: planos de governo e cobertura de imprensa (Gazeta do Povo, Congresso em Foco, InfoMoney, Poder360, Agência Brasil). Contexto do Ceará e do Amapá: comunicados da Petrobras e imprensa econômica regional.</p>
+    <p>As projeções dos cenários são minhas e não saem de um modelo estatístico. Peguei o consenso do mercado e ajustei com base nas propostas, no Congresso eleito e no que aconteceu em governos parecidos. As notas da tabela de setores também são opinião. A simulação do segundo turno parte de hipóteses que você mesmo pode mudar. Use tudo isso pra pensar, não pra decidir investimento.</p>
+  </section>
+  <details class="an-old"><summary>Leitura do 1º turno (números de 4/10, 21h38)</summary><div class="an-old-body">
+  
+  
+  <p class="an-lede">Brasil com 99,5% apurado, Ceará com 98,4%, Amapá fechado. Os números de deputado no Ceará ainda são projeção minha (explico no fim como fiz). O resto é contagem oficial, e o que for opinião está escrito como opinião.</p>
+
+  
+
+  <section>
     <h3>Brasil: o sobrenome Bolsonaro chegou na frente</h3>
     <div class="stats">
       <div><span>Flávio Bolsonaro</span><b class="flavio-t">47,13%</b><small>55,9 milhões</small></div>
@@ -230,7 +474,7 @@ footer a { color: var(--accent); }
     </details>
   </section>
 
-  <section id="an-ceara">
+  <section>
     <h3>Ceará: o PT segura o estado, e o estado se divide em dois</h3>
     <div class="stats">
       <div><span>Elmano (PT)</span><b>53,04%</b><small>reeleito no 1º turno</small></div>
@@ -254,7 +498,7 @@ footer a { color: var(--accent); }
     <details class="an-more"><summary>Projeção da Assembleia do Ceará (46 vagas)</summary><div class="tw"><table class="banc"><thead><tr><th>Partido / federação</th><th class=n>Lado</th><th class=n>Votos</th><th class=n>Vagas</th><th class=n>Quem entra</th></tr></thead><tbody><tr><td>PSB</td><td class=n><span class="tag gov">base</span></td><td class=n>1.347.732</td><td class=n>13</td><td class=n>Romeu Aldigueri, Osmar Baquit, Sérgio Aguiar, Guilherme Landim, Jeová Mota, Fabiola Carneiro, Elizeu Monteiro, Marcos Sobreira, Paloma Nunes, Marta Gonçalves, Manu Pimenta, Dr. Geronimo, Salmito</td></tr><tr><td>PT/PC do B/PV</td><td class=n><span class="tag gov">base</span></td><td class=n>1.290.546</td><td class=n>12</td><td class=n>Liziany Medeiros, Lais Nunes, Jade Romero, Catanho, Jô Farias, De Assis Diniz, Franzé Carneiro, Missias Dias, Gadyel, Ilo Neto, João Jaime, Moisés Braz</td></tr><tr><td>PL</td><td class=n><span class="tag opo">oposição</span></td><td class=n>721.211</td><td class=n>6</td><td class=n>Tancredo Dos Santos, Bella Carmelo, Abreu Junior, Dra Silvana, Dra Mayra Pinheiro, Pastor Frota</td></tr><tr><td>PSDB/CIDADANIA</td><td class=n><span class="tag opo">oposição</span></td><td class=n>407.921</td><td class=n>3</td><td class=n>Felipe Vasques, Davi Benevides, Emilia Pessoa</td></tr><tr><td>UNIÃO/PP</td><td class=n><span class="tag opo">oposição</span></td><td class=n>320.439</td><td class=n>3</td><td class=n>Zezinho Albuquerque, Moses Filho, James Bel</td></tr><tr><td>PSD</td><td class=n><span class="tag gov">base</span></td><td class=n>315.210</td><td class=n>3</td><td class=n>Domingos Filho, Firmo Camurça, Simão Pedro</td></tr><tr><td>PSOL/REDE</td><td class=n><span class="tag gov">base</span></td><td class=n>275.325</td><td class=n>2</td><td class=n>Gabriel Biologia, Leo Suricate</td></tr><tr><td>REPUBLICANOS</td><td class=n><span class="tag gov">base</span></td><td class=n>270.687</td><td class=n>2</td><td class=n>David Durand, Gardel Rolim</td></tr><tr><td>MDB</td><td class=n><span class="tag gov">base</span></td><td class=n>202.748</td><td class=n>1</td><td class=n>Davi De Raimundão</td></tr><tr><td>PRD/SOLIDARIEDADE</td><td class=n><span class="tag gov">base</span></td><td class=n>113.195</td><td class=n>1</td><td class=n>Georgia Do Marcelão</td></tr><tr><td>MOBILIZA</td><td class=n><span class="tag gov">base</span></td><td class=n>68.936</td><td class=n>0</td><td class=n>–</td></tr></tbody></table></div></details>
   </section>
 
-  <section id="an-fortaleza">
+  <section>
     <h3>Fortaleza: a capital votou Lula e votou Ciro</h3>
     <div class="stats">
       <div><span>Lula na capital</span><b class="lula-t">53,48%</b><small>Flávio 39,34%</small></div>
@@ -279,7 +523,7 @@ footer a { color: var(--accent); }
     <p>Gabriella Aguiar, vice-prefeita eleita com Evandro Leitão em 2024, é a vice de Elmano. Com a reeleição do governador ela vira vice-governadora em janeiro e Fortaleza fica sem vice-prefeita. Mais importante do que isso: a cidade que o PT ganhou por um fio em 2024 votou contra o candidato do PT a governador dois anos depois. Se eu fosse do grupo do Evandro, leria esse resultado como aviso pra 2028.</p>
   </section>
 
-  <section id="an-amapa">
+  <section>
     <h3>Amapá: Furlan varreu o estado, e Lula e Flávio empataram</h3>
     <div class="stats">
       <div><span>Dr. Furlan (PSD)</span><b>62,75%</b><small>eleito no 1º turno</small></div>
@@ -306,7 +550,7 @@ footer a { color: var(--accent); }
     <p>Macapá tem 56% do eleitorado do estado. Furlan fez 65,5% na cidade que governava, bem abaixo dos 85% de 2024. Ainda é muito, só que mostra que ser candidato a governador custa mais do que ser prefeito bem avaliado. A abstenção no interior foi alta: 28,2% em Pedra Branca do Amapari, 27,7% em Oiapoque, 26,1% em Serra do Navio e 25,0% em Laranjal do Jari, contra 15,9% em Macapá. Meu palpite é distância e transporte, porque em vários desses lugares chegar na seção não é simples. Não tenho como provar só com esses dados.</p>
   </section>
 
-  <section id="an-brancos">
+  <section>
     <h3>Brancos, nulos e quem ficou em casa</h3>
     <p>No Brasil, 1,84% votaram em branco e 2,93% anularam o voto pra presidente. Abstenção de 20,96%, ou seja, 33,3 milhões de eleitores não foram votar. É mais de 13 vezes a diferença entre Flávio e Lula. O segundo turno vai ser decidido em boa parte aí.</p>
     <p>O caso mais estranho é o Senado no Ceará. Somando brancos (7,18%) e nulos (10,55%), quase 18% dos votos pro Senado não foram pra ninguém, uns 2 milhões de votos. A explicação mais provável é simples: cada eleitor tinha dois votos e muita gente só sabia em quem votar no primeiro.</p>
@@ -316,20 +560,257 @@ footer a { color: var(--accent); }
     <p class="an-foot">* No Senado cada eleitor tem dois votos. Brancos e nulos estão sobre o total de votos, e a abstenção sobre o eleitorado.</p>
   </section>
 
-  <section id="an-turno">
+  <section>
     <h3>Daqui até 25 de outubro</h3>
     <p>A conta é fácil de fazer e difícil pro PT. Flávio precisa de mais 2,87 pontos pra passar de 50%. Lula precisa de 4,96. Fora os dois, sobraram 7,83% dos válidos, e a maior parte foi pra candidatos de direita ou centro-direita: Renan Santos, Caiado e Zema somam 4,71%. Augusto Cury tem 2,90% e é o voto mais solto. A esquerda pequena (UP, PSTU, PCB, PCO) não chega a 0,2%.</p>
     <p>Pra ganhar só com quem já votou, Lula precisaria de uns 63% de todo o voto que foi pros outros candidatos. Não vejo isso acontecendo. O caminho dele é outro: tirar gente de casa, principalmente no Nordeste, e virar votos em Minas. Flávio entra como favorito. Não é jogo jogado, porque segundo turno sempre muda a cara da eleição, mas quem está atrás é Lula.</p>
     <p>No Ceará, com governador e senadores definidos, a única disputa é a presidencial. O PT vai tentar repetir ou passar dos 63% de Lula, e Fortaleza é onde há mais voto pra buscar. No Amapá a coisa é mais aberta do que em qualquer outro lugar do país. Empate de 225 votos, governador eleito com o PL na coligação e Randolfe derrotado. Se Furlan entrar de cabeça na campanha de Flávio, acho difícil Lula ganhar lá.</p>
   </section>
 
-  <section class="an-method">
-    <h3>Como fiz essa análise</h3>
-    <p>Todos os números vêm dos arquivos públicos do TSE (resultados.tse.jus.br), baixados por volta de 21h38 de 4 de outubro, quando o Brasil tinha 99,5% das seções apuradas, o Ceará 98,4% e o Amapá 100%. Os resultados por município são os mesmos arquivos, cidade por cidade. As comparações com 2024 usam os arquivos oficiais da eleição municipal. Os números de 2022 são de memória e eu só uso os que tenho certeza.</p>
-    <p>As bancadas do Ceará são projeção. Reproduzi a regra de distribuição de vagas (quociente eleitoral, quociente partidário, a barreira de 80% e 20% pras sobras, e a disputa por médias) e testei no Amapá, que já está fechado: bateu cadeira por cadeira com o resultado oficial, federal e estadual. Mesmo assim, com 1,6% ainda por apurar, uma vaga na beirada pode mudar. A confirmação aparece nas abas Ceará e Fortaleza quando o TSE marcar os eleitos.</p>
-    <p>Não tive acesso a pesquisa de boca de urna nem ao noticiário da campanha das últimas semanas. Quando digo por que alguém votou de um jeito, é leitura dos números, não fato apurado.</p>
-  </section>
+  
+</div></details>
 </article>
+
+<script>
+(() => {
+  const nf = (v, d = 1) => v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const SVG = 'http://www.w3.org/2000/svg';
+
+  /* ---------- simulador do 2º turno ---------- */
+  const BASE = {"N": {"L": 4540661, "F": 5006753, "cury": 291370, "renan": 177614, "caiado": 137843, "zema": 8008, "esq": 12247, "outros": 4384, "te": 13101175}, "NE": {"L": 21426915, "F": 10384098, "cury": 817532, "renan": 528703, "caiado": 389332, "zema": 28606, "esq": 34023, "outros": 9956, "te": 43511237}, "CO": {"L": 2962985, "F": 5133321, "cury": 178992, "renan": 165836, "caiado": 613463, "zema": 12803, "esq": 11776, "outros": 4821, "te": 12001141}, "SE": {"L": 19229305, "F": 24894080, "cury": 1614396, "renan": 1316490, "caiado": 1048739, "zema": 220795, "esq": 113797, "outros": 28160, "te": 66344562}, "S": {"L": 5476345, "F": 10518859, "cury": 534651, "renan": 477783, "caiado": 410016, "zema": 52878, "esq": 29774, "outros": 8385, "te": 22870853}, "EX": {"L": 156215, "F": 142670, "cury": 9656, "renan": 8505, "caiado": 4672, "zema": 3296, "esq": 2036, "outros": 1187, "te": 916534}};
+  const REG_NOME = { N: 'Norte', NE: 'Nordeste', CO: 'Centro-Oeste', SE: 'Sudeste', S: 'Sul', EX: 'Exterior' };
+  const PRESETS = {
+    flavio: { cl: 45, cf: 40, dl: 15, df: 68, tne: 0, tr: 0, sw: 0 },
+    lula: { cl: 60, cf: 25, dl: 25, df: 55, tne: 4, tr: 0, sw: 3 },
+    zero: { cl: 0, cf: 0, dl: 0, df: 0, tne: 0, tr: 0, sw: 0 },
+  };
+  const ids = ['cl', 'cf', 'dl', 'df', 'tne', 'tr', 'sw'];
+  const el = id => document.getElementById(id);
+
+  function simular(p) {
+    let L = 0, F = 0;
+    const reg = {};
+    for (const [r, x] of Object.entries(BASE)) {
+      const dir = x.renan + x.caiado + x.zema;
+      let l = x.L + x.cury * p.cl / 100 + dir * p.dl / 100 + x.esq * 0.8 + x.outros * 0.3;
+      let f = x.F + x.cury * p.cf / 100 + dir * p.df / 100 + x.esq * 0.05 + x.outros * 0.5;
+      const troca = (p.sw > 0 ? x.F : x.L) * p.sw / 100;
+      l += troca; f -= troca;
+      const t = r === 'NE' ? p.tne : (r === 'EX' ? 0 : p.tr);
+      const novos = x.te * t / 100 * 0.95;
+      l += novos * x.L / (x.L + x.F);
+      f += novos * x.F / (x.L + x.F);
+      reg[r] = 100 * l / (l + f);
+      L += l; F += f;
+    }
+    return { pl: 100 * L / (L + F), dif: L - F, reg };
+  }
+
+  function lerSim() {
+    const p = {};
+    ids.forEach(k => { p[k] = Number(el('s-' + k).value); });
+    // quem vai pra um não pode passar de 100% somado
+    if (p.cl + p.cf > 100) { p.cf = 100 - p.cl; el('s-cf').value = p.cf; }
+    if (p.dl + p.df > 100) { p.df = 100 - p.dl; el('s-df').value = p.df; }
+    return p;
+  }
+
+  function rodarSim() {
+    const p = lerSim();
+    ids.forEach(k => {
+      const v = p[k];
+      el('o-' + k).textContent = (k === 'tne' || k === 'tr' || k === 'sw') ? (v > 0 ? '+' : '') + nf(v) : v + '%';
+    });
+    const r = simular(p);
+    const pf = 100 - r.pl;
+    el('sim-l').textContent = nf(r.pl, 2) + '%';
+    el('sim-f').textContent = nf(pf, 2) + '%';
+    el('sim-bl').style.width = r.pl + '%';
+    el('sim-bf').style.width = pf + '%';
+    const votos = Math.abs(Math.round(r.dif / 1000)) * 1000;
+    el('sim-win').innerHTML = `<b class="${r.dif > 0 ? 'lula-t' : 'flavio-t'}">${r.dif > 0 ? 'Lula' : 'Flávio'} vence</b><small>por ${votos.toLocaleString('pt-BR')} votos</small>`;
+    el('sim-reg').innerHTML = Object.entries(r.reg).filter(([k]) => k !== 'EX').map(([k, v]) =>
+      `<span><b>${REG_NOME[k]}</b> Lula ${nf(v)} · Flávio ${nf(100 - v)}</span>`).join('');
+  }
+
+  function aplicarPreset(nome) {
+    const p = PRESETS[nome];
+    ids.forEach(k => { el('s-' + k).value = p[k]; });
+    rodarSim();
+  }
+
+  /* ---------- Congresso ---------- */
+  const CONG = [
+    { casa: 'Câmara', total: 513, esq: 124, centro: 257, dir: 132, marcos: [[257, 'maioria'], [308, 'PEC'], [342, '2/3']] },
+    { casa: 'Senado', total: 81, esq: 16, centro: 35, dir: 30, marcos: [[41, 'maioria'], [49, 'PEC'], [54, '2/3']] },
+  ];
+  function desenharCongresso() {
+    el('cong').innerHTML = CONG.map(c => {
+      const w = v => (100 * v / c.total).toFixed(2);
+      return `<div class="cg">
+        <div class="cg-h"><b>${c.casa}</b><span>${c.total} cadeiras</span></div>
+        <div class="cg-bar">
+          <i class="lula" style="width:${w(c.esq)}%" title="Esquerda: ${c.esq}"></i><i class="centro" style="width:${w(c.centro)}%" title="Centro: ${c.centro}"></i><i class="flavio" style="width:${w(c.dir)}%" title="Direita: ${c.dir}"></i>
+          ${c.marcos.map(([v, n]) => `<s style="left:${w(v)}%"><em>${n} ${v}</em></s>`).join('')}
+        </div>
+        <div class="cg-lg"><span><i class="lula"></i>Esquerda ${c.esq}</span><span><i class="centro"></i>Centro ${c.centro}</span><span><i class="flavio"></i>Direita ${c.dir}</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ---------- gráficos de cenário ---------- */
+  const ANOS_H = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  const ANOS_P = [2025, 2026, 2027, 2028, 2029, 2030];
+  // séries: h = histórico 2017-2025 (BCB/IBGE), demais começam em 2025 (último dado) e 2026 = Focus
+  const IND = [
+    { id: 'pib', nome: 'PIB', un: '% ao ano', d: 1,
+      h: [1.32, 1.78, 1.22, -3.28, 4.76, 3.02, 3.24, 3.42, 2.29],
+      focus: [2.29, 1.86, 1.41, 1.83, 2.0, 2.0], lula: [2.29, 1.86, 1.6, 1.9, 1.9, 1.8], flavio: [2.29, 1.86, 1.3, 2.1, 2.4, 2.3],
+      bl: [0.8, 2.6], bf: [0.6, 3.2] },
+    { id: 'ipca', nome: 'Inflação (IPCA)', un: '% em 12 meses', d: 1,
+      h: [2.95, 3.75, 4.31, 4.52, 10.06, 5.79, 4.62, 4.83, 4.26],
+      focus: [4.26, 4.99, 4.31, 3.8, 3.5, 3.5], lula: [4.26, 4.99, 4.5, 4.0, 3.8, 3.7], flavio: [4.26, 4.99, 4.1, 3.6, 3.4, 3.3],
+      bl: [3.2, 6.0], bf: [2.8, 5.5] },
+    { id: 'selic', nome: 'Selic no fim do ano', un: '% ao ano', d: 2,
+      h: [7.0, 6.5, 4.5, 2.0, 9.25, 13.75, 11.75, 12.25, 15.0],
+      focus: [15.0, 13.5, 12.0, 10.5, 10.0, 10.0], lula: [15.0, 13.5, 12.25, 11.0, 10.5, 10.25], flavio: [15.0, 13.5, 11.5, 10.0, 9.5, 9.25],
+      bl: [8.75, 15.0], bf: [7.5, 14.0] },
+    { id: 'dolar', nome: 'Dólar em dezembro', un: 'R$', d: 2,
+      h: [3.29, 3.89, 4.11, 5.15, 5.65, 5.24, 4.90, 6.10, 5.45],
+      focus: [5.45, 5.2, 5.28, 5.3, 5.35, 5.4], lula: [5.45, 5.2, 5.45, 5.5, 5.55, 5.6], flavio: [5.45, 5.2, 5.0, 5.05, 5.15, 5.25],
+      bl: [4.9, 6.4], bf: [4.5, 6.2] },
+    { id: 'divida', nome: 'Dívida bruta', un: '% do PIB', d: 1,
+      h: [73.7, 75.3, 74.4, 86.9, 77.3, 71.7, 73.8, 76.3, 78.6],
+      focus: [78.6, 83.4, 87.3, 90.4, 92.9, 95.1], lula: [78.6, 83.4, 87.8, 91.3, 94.3, 97.0], flavio: [78.6, 83.4, 86.8, 89.0, 90.6, 91.8],
+      bl: [92, 103], bf: [86, 99] },
+    { id: 'desemp', nome: 'Desemprego', un: '% da força de trabalho', d: 1,
+      h: [11.9, 11.7, 11.1, 14.2, 11.1, 7.9, 7.4, 6.2, 5.1],
+      focus: [5.1, 5.3, 5.8, 6.4, 6.5, 6.5], lula: [5.1, 5.3, 5.6, 6.0, 6.2, 6.3], flavio: [5.1, 5.3, 6.0, 6.4, 6.3, 6.1],
+      bl: [5.2, 7.8], bf: [5.0, 8.0] },
+  ];
+  // faixa: abre linearmente de 2026 (sem incerteza extra) até o intervalo de 2030
+  function faixa(central, b) {
+    const c30 = central[5];
+    return central.map((v, i) => {
+      const k = Math.max(0, (ANOS_P[i] - 2026) / 4);
+      return [v - (c30 - b[0]) * k, v + (b[1] - c30) * k];
+    });
+  }
+  function ticks(lo, hi) {
+    const span = hi - lo, raw = span / 4;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => s >= raw);
+    const t = [];
+    for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) t.push(+v.toFixed(6));
+    return t;
+  }
+  function desenharGrafico(ind) {
+    const W = 340, H = 190, m = { l: 34, r: 40, t: 10, b: 22 };
+    const fl = faixa(ind.lula, ind.bl), ff = faixa(ind.flavio, ind.bf);
+    const vals = [...ind.h, ...ind.focus, ...fl.flat(), ...ff.flat()];
+    let lo = Math.min(...vals), hi = Math.max(...vals);
+    const tk = ticks(lo, hi);
+    lo = Math.min(lo, tk[0]); hi = Math.max(hi, tk[tk.length - 1]);
+    const x = a => m.l + (a - 2017) / (2030 - 2017) * (W - m.l - m.r);
+    const y = v => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
+    const path = (anos, vs) => vs.map((v, i) => `${i ? 'L' : 'M'}${x(anos[i]).toFixed(1)},${y(v).toFixed(1)}`).join('');
+    const area = band => {
+      const top = band.map((b, i) => `${i ? 'L' : 'M'}${x(ANOS_P[i]).toFixed(1)},${y(b[1]).toFixed(1)}`).join('');
+      const bot = band.map((b, i) => [i, b]).reverse().map(([i, b]) => `L${x(ANOS_P[i]).toFixed(1)},${y(b[0]).toFixed(1)}`).join('');
+      return top + bot + 'Z';
+    };
+    const fmt = v => nf(v, ind.d);
+    // rótulos finais sem colisão
+    let yl = y(ind.lula[5]), yf = y(ind.flavio[5]);
+    if (Math.abs(yl - yf) < 12) { const mid = (yl + yf) / 2, s = yl < yf ? -6 : 6; yl = mid + s; yf = mid - s; }
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ind.nome}: histórico e cenários até 2030">
+      ${tk.map(v => `<line class="gr" x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${m.l - 5}" y="${y(v) + 3.5}" text-anchor="end">${nf(v, Number.isInteger(v) ? 0 : (Math.abs(v * 10 - Math.round(v * 10)) < 1e-6 ? 1 : 2))}</text>`).join('')}
+      ${[2017, 2020, 2023, 2026, 2030].map(a => `<text class="ax" x="${x(a)}" y="${H - 6}" text-anchor="middle">${a}</text>`).join('')}
+      <line class="now" x1="${x(2026)}" x2="${x(2026)}" y1="${m.t}" y2="${H - m.b}"/>
+      <path class="band-l" d="${area(fl)}"/><path class="band-f" d="${area(ff)}"/>
+      <path class="ln hist" d="${path(ANOS_H, ind.h)}"/>
+      <path class="ln focus" d="${path(ANOS_P, ind.focus)}"/>
+      <path class="ln lula" d="${path(ANOS_P, ind.lula)}"/>
+      <path class="ln flavio" d="${path(ANOS_P, ind.flavio)}"/>
+      <circle class="pt lula" cx="${x(2030)}" cy="${y(ind.lula[5])}" r="3.5"/><circle class="pt flavio" cx="${x(2030)}" cy="${y(ind.flavio[5])}" r="3.5"/>
+      <text class="end" x="${x(2030) + 6}" y="${yl + 3.5}">${fmt(ind.lula[5])}</text>
+      <text class="end" x="${x(2030) + 6}" y="${yf + 3.5}">${fmt(ind.flavio[5])}</text>
+      <line class="cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" visibility="hidden"/>
+      <rect class="hit" x="${m.l}" y="0" width="${W - m.l - m.r + 10}" height="${H}"/>
+    </svg>`;
+    const box = document.createElement('figure');
+    box.className = 'chart';
+    box.innerHTML = `<figcaption><b>${ind.nome}</b><span>${ind.un}</span></figcaption><div class="cv">${svg}<div class="tip" hidden></div></div>`;
+    const root = box.querySelector('svg'), tip = box.querySelector('.tip'), cross = root.querySelector('.cross');
+    const pick = ev => {
+      const r = root.getBoundingClientRect();
+      const sx = (ev.clientX - r.left) / r.width * W;
+      const ano = Math.max(2017, Math.min(2030, Math.round(2017 + (sx - m.l) / (W - m.l - m.r) * 13)));
+      cross.setAttribute('x1', x(ano)); cross.setAttribute('x2', x(ano)); cross.setAttribute('visibility', 'visible');
+      let html = `<b>${ano}</b>`;
+      if (ano <= 2025) html += `<span>${ano === 2025 ? 'Último dado' : 'Histórico'}: ${fmt(ind.h[ano - 2017])}</span>`;
+      if (ano >= 2026) {
+        const i = ANOS_P.indexOf(ano);
+        html += `<span>Mercado: ${fmt(ind.focus[i])}</span><span class="lula-t">Lula: ${fmt(ind.lula[i])} <small>(${fmt(fl[i][0])} a ${fmt(fl[i][1])})</small></span><span class="flavio-t">Flávio: ${fmt(ind.flavio[i])} <small>(${fmt(ff[i][0])} a ${fmt(ff[i][1])})</small></span>`;
+      }
+      tip.innerHTML = html; tip.hidden = false;
+      const px = x(ano) / W * r.width;
+      tip.style.left = Math.min(Math.max(px - 70, 0), r.width - 150) + 'px';
+    };
+    const hide = () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); };
+    root.addEventListener('pointermove', pick);
+    root.addEventListener('pointerdown', pick);
+    root.addEventListener('pointerleave', hide);
+    return box;
+  }
+  function desenharTabela() {
+    const anos = [2026, 2027, 2028, 2029, 2030];
+    el('chart-table').innerHTML = IND.map(ind => `<div class="tw"><table><thead><tr><th>${ind.nome}</th>${anos.map(a => `<th class="n">${a}</th>`).join('')}</tr></thead><tbody>
+      ${[['Mercado', ind.focus], ['Lula', ind.lula], ['Flávio', ind.flavio]].map(([n, s]) => `<tr><td>${n}</td>${s.slice(1).map(v => `<td class="n">${nf(v, ind.d)}</td>`).join('')}</tr>`).join('')}
+    </tbody></table></div>`).join('');
+  }
+
+  /* ---------- mapa de setores ---------- */
+  // nota de -2 a +2: impacto esperado no setor comparado com o normal dele
+  const SETORES = [
+    ['Agronegócio', 0, 'Câmbio ajuda, tensão ambiental', 1, 'Ambiente amigável, risco com a China'],
+    ['Petróleo e gás', 1, 'Mais refino, mais interferência', 2, 'Licença mais rápida, venda de ativos'],
+    ['Mineração e minerais críticos', 0, 'Exige agregar valor aqui', 1, 'Menos exigência'],
+    ['Indústria', 1, 'BNDES, compras do governo', 0, 'Juro menor, menos subsídio'],
+    ['Exportação pros EUA', -1, 'Tarifaço difícil de negociar', 1, 'Afinidade com Trump'],
+    ['Varejo e serviços', 0, 'Renda sobe, 6x1 encarece folha', 1, 'Crediário mais barato'],
+    ['Bancos', 0, 'Banco público mais ativo', 1, 'Juro cai, crédito cresce'],
+    ['Construção e imóveis', 2, 'Minha Casa Minha Vida forte', 1, 'Financiamento mais barato'],
+    ['Infraestrutura e concessões', 1, 'PAC e concessões', 2, 'R$ 900 bi, privatizações'],
+    ['Energia limpa e hidrogênio', 1, 'Crédito fiscal sai em 2028', 0, 'Subsídio deve encolher'],
+    ['Tecnologia e data centers', 1, 'Incentivo com regulação', 1, 'Menos regulação'],
+    ['Turismo interno', 1, 'Dólar alto segura o turista aqui', 0, 'Dólar baixo leva gente pra fora'],
+    ['Serviço público', 1, 'Concurso e reajuste', -2, 'Menos ministério, menos concurso'],
+    ['Agricultura familiar', 2, 'Crédito e assistência', -1, 'Prioridade menor'],
+    ['Quem vive de salário mínimo', 1, 'Ganho real garantido', -1, 'Regra pode mudar'],
+    ['Proteção ambiental', 1, 'Fiscalização segue', -2, 'Deve afrouxar'],
+  ];
+  const NOTA = { 2: ['muito melhor', 'p2'], 1: ['melhor', 'p1'], 0: ['neutro', 'z0'], '-1': ['pior', 'n1'], '-2': ['muito pior', 'n2'] };
+  function desenharSetores() {
+    el('heat').innerHTML = SETORES.map(([s, nl, tl, nfl, tf]) => `<tr><td>${s}</td>
+      <td><span class="hm ${NOTA[nl][1]}">${NOTA[nl][0]}</span><small>${tl}</small></td>
+      <td><span class="hm ${NOTA[nfl][1]}">${NOTA[nfl][0]}</span><small>${tf}</small></td></tr>`).join('');
+  }
+
+  function iniciar() {
+    if (!el('sim')) return;
+    aplicarPreset('flavio');
+    ids.forEach(k => el('s-' + k).addEventListener('input', rodarSim));
+    document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => aplicarPreset(b.dataset.preset)));
+    desenharCongresso();
+    const box = el('charts');
+    IND.forEach(ind => box.appendChild(desenharGrafico(ind)));
+    desenharTabela();
+    desenharSetores();
+  }
+  iniciar();
+})();
+</script>
 
 <footer>Dados oficiais do TSE (resultados.tse.jus.br), atualização automática a cada 30 s. Toque no horário para atualizar na hora.</footer>
 
@@ -552,7 +1033,7 @@ footer a { color: var(--accent); }
     const latest = ok.map(s => s.data.hg).sort().pop();
     const left = Math.max(0, Math.round((nextAt - Date.now()) / 1000));
     const el = document.getElementById('status');
-    if (tab === 'analise') { el.innerHTML = 'retrato do 1º turno<br>números de 4/10, 21h38'; document.getElementById('refresh').classList.remove('spin'); return; }
+    if (tab === 'analise') { el.innerHTML = 'cenários até 2030<br>dados de 5/10'; document.getElementById('refresh').classList.remove('spin'); return; }
     el.innerHTML = busy ? 'atualizando…' : `TSE <b>${latest || '--:--'}</b><br>de novo em ${left}s`;
     document.getElementById('refresh').classList.toggle('spin', busy);
   }
