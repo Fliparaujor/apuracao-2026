@@ -1,0 +1,163 @@
+{
+ "start": 0.0,
+ "end": 13.2,
+ "fade_out": 0.35,
+ "colors": [
+  {
+   "t": 0,
+   "c": [
+    [
+     196,
+     44,
+     38
+    ],
+    [
+     45,
+     115,
+     225
+    ]
+   ]
+  }
+ ],
+ "beats": [
+  {
+   "name": "Electrode",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-21.png",
+   "s": 0.0,
+   "r": 0.16666666666666666,
+   "e": 0.36666666666666664
+  },
+  {
+   "name": "Diglett",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-47.png",
+   "s": 0.36666666666666664,
+   "r": 0.6333333333333333,
+   "e": 0.9
+  },
+  {
+   "name": "Nidoran ♂",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-55.png",
+   "s": 0.9,
+   "r": 1.1666666666666667,
+   "e": 1.4
+  },
+  {
+   "name": "Mankey",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-55.png",
+   "s": 1.4,
+   "r": 1.6666666666666667,
+   "e": 1.9333333333333333
+  },
+  {
+   "name": "Venusaur",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-15.png",
+   "s": 1.9333333333333333,
+   "r": 2.2,
+   "e": 2.433333333333333
+  },
+  {
+   "name": "Rattata",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-61.png",
+   "s": 2.433333333333333,
+   "r": 2.7,
+   "e": 2.933333333333333
+  },
+  {
+   "name": "Fearow",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-36.png",
+   "s": 2.933333333333333,
+   "r": 3.2,
+   "e": 3.466666666666667
+  },
+  {
+   "name": "Pidgey",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-57.png",
+   "s": 3.466666666666667,
+   "r": 3.7,
+   "e": 3.966666666666667
+  },
+  {
+   "name": "Seaking",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-46.png",
+   "s": 3.966666666666667,
+   "r": 4.233333333333333,
+   "e": 4.466666666666667
+  },
+  {
+   "name": "Jolteon",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-4.png",
+   "s": 4.466666666666667,
+   "r": 4.766666666666667,
+   "e": 5.0
+  },
+  {
+   "name": "Dragonite",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base3-4.png",
+   "s": 5.0,
+   "r": 5.266666666666667,
+   "e": 5.5
+  },
+  {
+   "name": "Gastly",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-50.png",
+   "s": 5.5,
+   "r": 5.766666666666667,
+   "e": 6.033333333333333
+  },
+  {
+   "name": "Ponyta",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-60.png",
+   "s": 6.033333333333333,
+   "r": 6.266666666666667,
+   "e": 6.533333333333333
+  },
+  {
+   "name": "Vaporeon",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-12.png",
+   "s": 6.533333333333333,
+   "r": 6.8,
+   "e": 7.033333333333333
+  },
+  {
+   "name": "Poliwrath",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base1-13.png",
+   "s": 7.033333333333333,
+   "r": 7.333333333333333,
+   "e": 7.566666666666666
+  },
+  {
+   "name": "Butterfree",
+   "file": "/tmp/claude-0/-home-user-apuracao-2026/4bce614d-a456-5490-9b69-6972a8ebe06c/scratchpad/cards/base2-33.png",
+   "s": 7.566666666666666,
+   "r": 7.833333333333333,
+   "e": 8.33
+  }
+ ],
+ "chants": [
+  {
+   "start": 8.33,
+   "end": 13.2,
+   "new_from": 0,
+   "text": [
+    {
+     "t": 8.55,
+     "words": "CATCH 'EM!",
+     "step": 0.15
+    },
+    {
+     "t": 9.25,
+     "words": "GOTTA CATCH 'EM ALL!"
+    },
+    {
+     "t": 10.25,
+     "words": "GOTTA CATCH 'EM ALL!"
+    },
+    {
+     "t": 11.9,
+     "words": "POKÉMON!",
+     "step": 1
+    }
+   ]
+  }
+ ]
+}
