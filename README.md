@@ -52,3 +52,29 @@ O arquivo **index.html** é a versão feita anteriormente para 1º turno, com an
 ## Responsabilidade
 
 Projeto independente, sem vínculo institucional com o Tribunal Superior Eleitoral.
+
+## Analista político com IA real — novo
+
+O painel possui uma aba **✦ Analista**, que pode ler dados oficiais em tempo quase real e elaborar uma análise com Gemini 3.8 Flash. O app continua exibindo os resultados sem chave; a aba de IA requer uma API key criada em [Google AI Studio](https://aistudio.google.com/api-keys). Há uma cota gratuita sujeita a limites e disponibilidade conforme o projeto. **Não usa o limite do Claude Code e não usa a assinatura ChatGPT.**
+
+1. No Termux, pare o servidor atual com **Ctrl+C**.
+2. Execute:
+
+```bash
+cd ~/apuracao-2026
+git pull
+read -rsp "Cole a chave Gemini: " GEMINI_API_KEY; echo
+export GEMINI_API_KEY
+python server.py
+```
+
+3. Cole a chave **no próprio Termux** quando solicitado (o texto digitado não aparece). Não compartilhe a chave em chat, screenshots ou GitHub.
+4. No Chrome, abra **http://127.0.0.1:8080/ao-vivo.html** → **✦ Analista** → **Analisar agora**.
+
+A chave permanece somente no processo/sessão do Termux; reiniciando o aplicativo, é preciso reexportá-la. Para testar a conexão, abra `http://127.0.0.1:8080/api/ia/status` — o endpoint revela se está configurada, **nunca o segredo**. Se seu modelo não estiver disponível, opcionalmente configure `export GEMINI_MODEL=gemini-3.8-flash` ou outro modelo suportado pela sua conta. Não use modelos pagos sem verificar a cobrança da sua conta.
+
+**Recursos:** entrevista com perguntas livres, modo briefing, investigação de divergências regionais e comparações históricas, cenário matemático condicional e atualização por IA a cada 3 minutos **somente se habilitada**, enquanto a aba estiver visível. São consultados dados oficiais da eleição federal 6258 e, para contexto histórico, da 6257. Os cálculos e o histórico local usam somente Python padrão e SQLite; Gemini é chamado pelo backend com a chave privada. O navegador **nunca** recebe a API key.
+
+**Limitações importantes:** não é observação ininterrupta; a aba precisa estar aberta e o Android precisa manter o Termux executando. O Gemini não navega na imprensa; só interpreta os boletins recuperados, e pode errar. Não produz prognóstico de quem será eleito nem chances numéricas. Em problemas de TSE ou cota do Gemini, a aba explicita a falha. Os arquivos oficiais podem mudar de formato ou ficar indisponíveis temporariamente.
+
+O Google pode usar conteúdo enviado pela API gratuita para melhorar seus serviços; evite inserir dados pessoais nas perguntas. Confirme a política atual ao cadastrar sua chave.
