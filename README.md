@@ -1,184 +1,186 @@
-# Radar 2026 — 2º turno ao vivo
+# Radar 2026 + O Conselho
 
-Novo painel mobile-first para acompanhar a totalização presidencial do segundo turno de 25/10/2026. Evolução e análises baseadas exclusivamente nas parciais oficiais do Tribunal Superior Eleitoral.
+Aplicativo de análise eleitoral que roda **no próprio Samsung Galaxy S23** (Termux + Chrome):
+acompanha a totalização oficial do TSE do **2º turno de 25/10/2026**, calcula tudo com um motor
+matemático determinístico e, se você fornecer suas chaves gratuitas, convoca **O Conselho** — vários
+modelos de linguagem que analisam os mesmos boletins de forma independente, se confrontam, replicam,
+passam por uma auditoria numérica e recebem um relatório com concordâncias e divergências.
 
-## Abrir no Samsung S23 (sem computador, sem instalar nada)
+Nenhum voto, pesquisa ou horário é inventado. Nenhuma probabilidade de vitória é estimada. Nenhum
+serviço pago é ativado. As chaves ficam só no seu aparelho.
 
-**[ABRIR O RADAR AO VIVO](https://raw.githack.com/Fliparaujor/apuracao-2026/main/ao-vivo.html)**
+> Projeto independente, sem vínculo com o Tribunal Superior Eleitoral.
 
-No Chrome Android, use o menu `⋮` → **Adicionar à tela inicial** (ou **Instalar app**, se disponível). Precisa de internet para consultar o TSE. Esse endereço é servido por um serviço estático externo, não é hospedagem oficial do GitHub Pages. Na primeira visita, o rawgit.hack mostra uma tela de confirmação de segurança: revise o endereço e continue se estiver correto.
+## Instalar no S23 (um comando)
 
-### Rodar em localhost, diretamente no celular (Termux)
-
-1. Instale o Termux atualizado pelo F-Droid.
-2. Abra o Termux e execute:
+1. Instale o **Termux** pelo F-Droid (a versão da Play Store é antiga).
+2. Abra o Termux e cole:
 
 ```bash
-pkg update
-pkg install -y git python
-git clone https://github.com/Fliparaujor/apuracao-2026.git
-cd apuracao-2026
-python server.py
+curl -fsSL https://raw.githubusercontent.com/Fliparaujor/apuracao-2026/main/instalar.sh | bash
 ```
 
-3. Abra **http://127.0.0.1:8080/ao-vivo.html** no Chrome do S23.
+Enquanto esta versão ainda não estiver no branch `main`, use o branch de desenvolvimento:
 
-O Termux deve permanecer com o servidor ligado para o endereço localhost funcionar. O servidor local faz proxy restrito dos JSON oficiais e evita bloqueio CORS ao abrir pelo localhost.
+```bash
+curl -fsSL https://raw.githubusercontent.com/Fliparaujor/apuracao-2026/claude/blissful-fermi-9oy396/instalar.sh | RADAR_BRANCH=claude/blissful-fermi-9oy396 bash
+```
 
-### Hospedagem recomendada (opcional)
+O instalador instala Python e Git, baixa o projeto em `~/apuracao-2026`, verifica o ambiente,
+pergunta se você quer configurar chaves de IA (pode pular) e inicia o servidor.
 
-Ative GitHub Pages em **Settings → Pages → Deploy from a branch → main → /(root)**. Depois use o endereço `https://fliparaujor.github.io/apuracao-2026/ao-vivo.html` para instalar como PWA. Antes da ativação, esse endereço pode não existir.
+3. Abra no Chrome: **http://127.0.0.1:8080/** → menu ⋮ → **Instalar app** (fica na tela inicial).
 
-## Recursos
-
-- Presidente no Brasil inteiro, 27 UFs, Fortaleza e Macapá
-- Disputas de governador no 2º turno nas seis UFs com eleição (AC, AM, DF, ES, RN, TO)
-- Atualização automática a cada 30 segundos, com pausa quando o app está em segundo plano
-- Liderança parcial, diferenças em votos e em pontos percentuais, percentual de seções, comparecimento, brancos/nulos
-- Séries históricas no navegador do aparelho, armazenadas durante a utilização
-- Análises automáticas determinísticas, sem IA e sem API paga
-- Modo instalável via manifesto, suporte básico a tela offline (nunca cachear JSON do TSE)
-
-**Fonte:** `https://resultados.tse.jus.br/oficial/ele2026/`
-- Presidente, 2º turno: eleição **6258**, cargo **1**
-- Governador, 2º turno: eleição **6260**, cargo **3**
-
-Os dados serão publicados após 17h (horário de Brasília). O TSE publica arquivos públicos e pode haver latência de atualização, erros de rede e mudanças nas políticas CORS. O app não apresenta resultados fictícios. **Apurado = percentual de seções totalizadas**, não votação futura ou estimativa de vitória. O histórico local só captura os momentos em que a página está aberta.
-
-## Versão anterior preservada
-
-O arquivo **index.html** é a versão feita anteriormente para 1º turno, com análises estáticas. Acesse: https://raw.githack.com/Fliparaujor/apuracao-2026/main/index.html
-
-## Responsabilidade
-
-Projeto independente, sem vínculo institucional com o Tribunal Superior Eleitoral.
-
-## Analista político com IA real — novo
-
-O painel possui uma aba **✦ Analista**, que pode ler dados oficiais em tempo quase real e elaborar uma análise com Gemini 3.8 Flash. O app continua exibindo os resultados sem chave; a aba de IA requer uma API key criada em [Google AI Studio](https://aistudio.google.com/api-keys). Há uma cota gratuita sujeita a limites e disponibilidade conforme o projeto. **Não usa o limite do Claude Code e não usa a assinatura ChatGPT.**
-
-1. No Termux, pare o servidor atual com **Ctrl+C**.
-2. Execute:
+### Dia a dia
 
 ```bash
 cd ~/apuracao-2026
-git pull
-read -rsp "Cole a chave Gemini: " GEMINI_API_KEY; echo
-export GEMINI_API_KEY
-python server.py
+bash radar.sh            # inicia o servidor (Ctrl+C encerra; o histórico fica guardado)
+bash radar.sh chaves     # adicionar, trocar, remover ou testar chaves de IA
+bash radar.sh diagnostico
+bash radar.sh atualizar  # git pull
+bash radar.sh testes
 ```
 
-3. Cole a chave **no próprio Termux** quando solicitado (o texto digitado não aparece). Não compartilhe a chave em chat, screenshots ou GitHub.
-4. No Chrome, abra **http://127.0.0.1:8080/ao-vivo.html** → **✦ Analista** → **Analisar agora**.
+O Termux precisa permanecer aberto. O `radar.sh` aciona `termux-wake-lock`; mesmo assim, veja
+[Limitações no Android](#limitações-no-android).
 
-A chave permanece somente no processo/sessão do Termux; reiniciando o aplicativo, é preciso reexportá-la. Para testar a conexão, abra `http://127.0.0.1:8080/api/ia/status` — o endpoint revela se está configurada, **nunca o segredo**. Se seu modelo não estiver disponível, opcionalmente configure `export GEMINI_MODEL=gemini-3.8-flash` ou outro modelo suportado pela sua conta. Não use modelos pagos sem verificar a cobrança da sua conta.
+## Configurar as chaves (sem editar arquivo nenhum)
 
-**Recursos:** entrevista com perguntas livres, modo briefing, investigação de divergências regionais e comparações históricas, cenário matemático condicional e atualização por IA a cada 3 minutos **somente se habilitada**, enquanto a aba estiver visível. São consultados dados oficiais da eleição federal 6258 e, para contexto histórico, da 6257. Os cálculos e o histórico local usam somente Python padrão e SQLite; Gemini é chamado pelo backend com a chave privada. O navegador **nunca** recebe a API key.
+`bash radar.sh chaves` abre um assistente que pergunta provedor por provedor. Você cola a chave
+**no Termux** (não aparece ao digitar), o programa testa a autenticação e lista os modelos que a sua
+conta realmente pode usar, e grava em `~/.radar2026/segredos.env` com permissão `600`, fora do Git.
+Chave inválida é apontada com o HTTP devolvido e pode ser removida na hora. Nunca cole chaves em
+chats, prints ou mensagens; se expôs uma, revogue-a no site do provedor.
 
-**Limitações importantes:** não é observação ininterrupta; a aba precisa estar aberta e o Android precisa manter o Termux executando. O Gemini não navega na imprensa; só interpreta os boletins recuperados, e pode errar. Não produz prognóstico de quem será eleito nem chances numéricas. Em problemas de TSE ou cota do Gemini, a aba explicita a falha. Os arquivos oficiais podem mudar de formato ou ficar indisponíveis temporariamente.
-
-O Google pode usar conteúdo enviado pela API gratuita para melhorar seus serviços; evite inserir dados pessoais nas perguntas. Confirme a política atual ao cadastrar sua chave.
-
-
-## ◈ O Conselho — debate entre várias IAs (25/10/2026)
-
-O Conselho é uma **segunda aba nova** do Radar 2026: chega a ter **7 modelos de 6 provedores**, conforme as chaves que você configurar no Termux. Nenhuma assinatura de chatbot é usada como se fosse API. Nenhuma API paga é cadastrada automaticamente.
-
-| Cadeira | Provedor | Modelo | Variável de ambiente |
+| Provedor | Variável | Onde criar | Nível gratuito (resumo) |
 | --- | --- | --- | --- |
-| Quantitativo | Groq | GPT-OSS 120B | GROQ_API_KEY |
-| Cético | Groq | Qwen 3.8 27B | GROQ_API_KEY |
-| Regional | Mistral | Mistral Small | MISTRAL_API_KEY |
-| Histórico | OpenRouter | Router de modelos gratuitos (varia) | OPENROUTER_API_KEY |
-| Auditoria | Cohere | Command A+ (trial/eval) | COHERE_API_KEY |
-| Investigação | Cloudflare Workers AI | Nemotron 3 120B (Free, 10 mil Neurons/dia) | CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID |
-| Contraponto | Gemini | Gemini Flash (quando elegível para a cota Free) | GEMINI_API_KEY |
+| Groq | `GROQ_API_KEY` | console.groq.com/keys | sem cartão; ~30 req/min, cota diária; catálogo muda |
+| Gemini (AI Studio) | `GEMINI_API_KEY` | aistudio.google.com/api-keys | free tier com cotas baixas; modelos Pro podem não estar disponíveis |
+| Mistral | `MISTRAL_API_KEY` | console.mistral.ai/api-keys | plano gratuito, pede verificação de telefone |
+| OpenRouter | `OPENROUTER_API_KEY` | openrouter.ai/settings/keys | só modelos `:free`; dezenas de req/dia sem crédito |
+| Cohere | `COHERE_API_KEY` | dashboard.cohere.com/api-keys | chave trial, 1.000 chamadas/mês, uso não comercial |
+| Cloudflare Workers AI | `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` | dash.cloudflare.com | 10.000 Neurons/dia no plano Free (excesso é negado, não cobrado) |
+| Hugging Face | `HF_TOKEN` | huggingface.co/settings/tokens | crédito mensal mínimo; para em HTTP 402 |
 
-**Apenas membros com chave e resposta bem-sucedida participam.** Duas IAs do Groq com uma única chave não significam dois provedores independentes. O OpenRouter usa SOMENTE \`openrouter/free\`, sem fallback pago. Serviços que agora exigem cartão ou pagamento (por exemplo, SambaNova e o crédito promocional da Cerebras, conforme condições recentes) ficaram de fora para respeitar a restrição de **não cadastrar faturamento**.
+Os modelos **não são fixos no código**: cada adaptador lista o catálogo da conta e escolhe por
+preferência (por exemplo, no Groq `openai/gpt-oss-120b` → `qwen/…` → `llama…`; no Gemini o
+`flash` estável mais novo, depois `flash-lite`). O modelo realmente usado aparece na interface.
+Para forçar um modelo, edite `modelos_preferidos` em `~/.radar2026/config.json` ou use a aba Sistema.
 
-**Começando só pelo Groq, sem faturamento:**
+**Aviso honesto:** os limites gratuitos acima vêm da documentação e de relatos de outubro/2026 e
+mudam sem aviso. O app trata HTTP 401/402/403/404/429/5xx, respeita `Retry-After`, pausa o provedor
+após falhas seguidas e nunca ativa cobrança. Uma assinatura de chatbot (ChatGPT, Gemini app, Le Chat)
+**não** vale como chave de API.
 
-1. Crie sua chave no [GroqCloud](https://console.groq.com/keys), selecionando o nível gratuito.
-2. No Termux, pare o servidor atual com **Ctrl+C**.
-3. Execute um comando por vez:
+## O que o app faz
 
-\`\`\`bash
-cd ~/apuracao-2026
-git pull
-read -rsp "Cole a chave do Groq: " GROQ_API_KEY; echo
-export GROQ_API_KEY
-python server.py
-\`\`\`
+**Painel** — Presidente (Brasil, 27 UFs, Fortaleza, Macapá e qualquer município pelo código do TSE)
+e Governador nas UFs com 2º turno (lista confirmada em tempo de execução contra os arquivos do TSE).
+Percentuais, votos, diferença em votos e pontos, seções totalizadas, comparecimento, brancos/nulos,
+status oficial, variação desde o boletim anterior e cenário hipotético com premissa explícita.
 
-4. Quando o Termux pedir, cole o segredo **lá no próprio Termux**, nunca nesta conversa. Digitar não exibe caracteres. Abra [localhost](http://127.0.0.1:8080/ao-vivo.html) → aba **◈ Conselho** → **Convocar Conselho**.
+**Estados** — comparação regional, ordenação por nome, totalização ou margem, dispersão da totalização
+e alertas de UFs atrasadas.
 
-Para ativar novos membros, interrompa o servidor (**Ctrl+C**) e, ANTES de iniciar \`python server.py\`, exporte outras chaves gratuitas:
+**Histórico** — evolução por boletim (gráfico), tabela de boletins e contadores que separam
+*consultas ao TSE* de *boletins realmente novos*.
 
-\`\`\`bash
-read -rsp "Chave Mistral: " MISTRAL_API_KEY; echo
-export MISTRAL_API_KEY
-read -rsp "Chave OpenRouter: " OPENROUTER_API_KEY; echo
-export OPENROUTER_API_KEY
-read -rsp "Chave Cohere: " COHERE_API_KEY; echo
-export COHERE_API_KEY
-# (Opcional) caso sua conta Google tenha Gemini API Free:
-read -rsp "Chave Gemini: " GEMINI_API_KEY; echo
-export GEMINI_API_KEY
-python server.py
-\`\`\`
+**Analista** — perguntas livres a um modelo, sempre com a leitura matemática ao lado e auditoria dos
+números citados. Sem chave, responde só com a matemática.
 
-Opcional para Cloudflare (precisa de **plano Workers Free**, ID da conta e token com permissão Workers AI; mantenha a conta no plano Free para evitar cobranças):
+**O Conselho** — ver abaixo.
 
-```bash
-read -rsp "Token Cloudflare Workers AI: " CLOUDFLARE_API_TOKEN; echo
-export CLOUDFLARE_API_TOKEN
-read -rp "ID da conta Cloudflare: " CLOUDFLARE_ACCOUNT_ID
-export CLOUDFLARE_ACCOUNT_ID
-python server.py
+**Sistema** — "Testar tudo": servidor, TSE, códigos de eleição, banco, segredos, cada provedor
+(configurado / autenticado / modelo / pronto), coletor, última atualização e cotas; resultado
+copiável sem segredos. Configuração de intervalo, limites de sessão e rodadas.
+
+### Selo de atualidade
+
+`AO VIVO` só aparece quando o boletim do TSE tem até 15 minutos e a totalização não foi encerrada.
+Caso contrário: `Boletim há N min`, `Totalização encerrada` ou `Dados históricos`. Se o servidor
+local cair, a interface mostra o último estado guardado **rotulado como guardado**, nunca como ao vivo.
+
+## O Conselho
+
+Cadeiras (papéis) atribuídas aos modelos prontos, com diversidade de provedor antes de repetir
+provedor; modelos do mesmo provedor são marcados como **não independentes**:
+
+Quantitativo · Cético · Regional · Histórico · Metodologia · Investigativo · Auditor ·
+Participação · Ritmo · Relator (o relator é a primeira cadeira, ou uma cadeira dedicada com 8+ modelos).
+
+Protocolo de uma reunião:
+
+1. **Pareceres independentes** — cada modelo recebe só a evidência oficial, o histórico necessário,
+   a pergunta, as instruções do papel e as regras de neutralidade. Ninguém vê os outros.
+2. **Confronto** — cada modelo recebe os pareceres alheios e aponta concordâncias verificáveis,
+   afirmações sem suporte, premissas, inconsistências, explicações alternativas e dados necessários.
+3. **Réplicas** — curtas; puladas automaticamente quando a cota está curta.
+4. **Auditoria determinística** — todo número citado é conferido contra os arquivos do TSE e os
+   cálculos do motor; prognósticos ("vai vencer", "% de chance") são marcados.
+5. **Relatório** — fatos confirmados, cálculos, concordâncias (quantos e quais), divergências
+   persistentes, hipóteses a verificar, limitações, fontes e horários.
+
+Classificação honesta do resultado: **deliberação** (2+ modelos), **análise individual** (1 modelo),
+**debate sem relatoria** (relator falhou → síntese automática sem IA) ou **somente matemática**
+(nenhum modelo). Falha de um provedor nunca derruba os outros. A reunião roda em segundo plano com
+progresso por rodada e botão de cancelar. Há limite de reuniões por hora e de chamadas por sessão;
+a reconvocação automática a cada boletim novo é **opcional e desligada por padrão**.
+
+## Dados oficiais
+
+Fonte: `https://resultados.tse.jus.br/oficial/ele2026/<eleição>/dados/<uf>/<uf><município>-c<cargo>-e<eleição>-u.json`
+(arquivo de resultado unificado, EA20). Códigos: **6257** (1º turno federal, 04/10), **6258**
+(2º turno federal), **6260** (2º turno estadual). O servidor lê `comum/config/ele-c.json` na
+inicialização e registra qualquer divergência. O coletor consulta os escopos prioritários a cada
+30 s e os demais estados a cada 60 s, guardando em SQLite (`~/.radar2026/radar.sqlite3`) **apenas
+boletins diferentes** — uma resposta HTTP 200 repetida não vira boletim novo. O 1º turno é
+guardado como referência histórica e comparado com as ressalvas metodológicas devidas.
+
+Campos interpretados: `carg/agr/par/cand` (`n`, `nmu`, `nm`, `vap`, `pvap`/`pvapn`, `st`, `e`,
+`sqcand`), `s.pst/pstn/st/ts`, `v.vv/vb/tvn/pvb/ptvn`, `e.te/est/c/a/pc/pa`, `dt/ht`, `dg/hg`, `tf`,
+`md`, `cdabr`, `t`, `ele`.
+
+## Limitações no Android
+
+- O Android pode suspender o Termux em segundo plano (economia de bateria, "phantom process killer").
+  Mantenha o Termux aberto ou na notificação persistente, desative a otimização de bateria para o
+  Termux e, no Android 14+, considere a opção de desenvolvedor "Desativar restrições de processos
+  filhos". O app **não** alega coleta ininterrupta: o histórico cobre apenas os períodos em que o
+  servidor esteve ativo, e os contadores mostram isso.
+- A coleta do TSE continua funcionando mesmo com todas as IAs esgotadas ou sem chave.
+- O servidor escuta em `127.0.0.1`. Para expor na rede (`RADAR_BIND=0.0.0.0`) defina também
+  `RADAR_TOKEN` e coloque um proxy HTTPS na frente; as chaves nunca saem do backend.
+
+## O que foi e o que não foi validado
+
+Validado neste repositório (CI em GitHub Actions, Python 3.11–3.13):
+
+- 66 testes: parser TSE com os campos reais de 2026, banco (dedupe, migração, importação do banco
+  antigo), motor matemático, cotas, os 7 adaptadores com HTTP simulado, O Conselho completo com
+  respostas **simuladas** (5 rodadas, falha de modelo, 1 modelo, 0 modelos, cancelamento, auditoria
+  pegando número inventado), API local real, segurança (nenhum segredo em respostas, logs ou repositório);
+- interface no viewport do S23 (Playwright): 6 abas sem transbordamento, botões acessíveis, diagnóstico sem segredos.
+
+**Não validado aqui, por falta de acesso de rede do ambiente de desenvolvimento ao TSE e às APIs
+dos provedores:** as chamadas reais ao TSE e a cada provedor. Os formatos seguem a documentação e
+coletores públicos que gravaram os arquivos reais de 25/10/2026; a primeira execução no S23 com
+`bash radar.sh diagnostico` e **Sistema → Testar tudo** é o teste real. Se um provedor devolver
+algo inesperado, ele aparece como "não pronto" com o HTTP e a mensagem, sem derrubar o restante.
+
+## Estrutura
+
+```
+radar/            backend (stdlib apenas)
+  tse.py          camada 1 · coleta oficial        db.py          camada 2 · SQLite
+  matematica.py   camada 3 · motor determinístico  provedores/    camada 4 · 7 adaptadores + cotas.py
+  conselho.py     camada 5 · deliberação           servidor.py    camada 6 · API + estáticos
+  diagnostico.py  camada 7 · "Testar tudo"         coletor.py     coleta em segundo plano
+  analista.py, evidencias.py, jobs.py, config.py, configurador.py, __main__.py
+web/              interface PWA (index.html, app.js, app.css, sw.js, manifest, ícones)
+tests/            testes + TSE simulado + provedores simulados + teste de UI
+radar.sh, instalar.sh, server.py (compatibilidade: `python server.py`)
+legado/primeiro-turno.html  versão anterior preservada
 ```
 
-Acesse https://dash.cloudflare.com para obter o Account ID e gerar o token Workers AI. O código só chama o modelo `@cf/nvidia/nemotron-3-120b-a12b` do Workers Free; **não** ativa modelos terceirizados via Unified Billing. O plano Free impõe o limite de 10 mil Neurons/dia e nega o excesso, conforme a documentação da Cloudflare.
-
-Só faça as linhas dos provedores que tiverem chave; os demais permanecem inativos. Cada provedor tem termos de uso, políticas de tratamento de dados e limites gratuitos próprios. Para o modo Free não há cadastro de cartão feito pelo aplicativo. Nunca compartilhe as chaves por WhatsApp ou screenshot. A consulta ao TSE é pública, mas sua pergunta é enviada aos provedores configurados.
-
-### Como uma reunião funciona
-
-1. **Análises independentes:** cada modelo recebe somente os mesmos boletins públicos do TSE, a pergunta e uma função específica.
-2. **Críticas cruzadas:** cada modelo analisa os argumentos de outros modelos, aponta falhas, concordâncias fundamentadas e dados faltantes.
-3. **Relatoria:** um modelo sintetiza pontos de convergência e as discordâncias não resolvidas. Não declara consenso quando só uma IA respondeu.
-
-Os pareceres e réplicas aparecem separadamente. O relatório não é previsão eleitoral, não estima probabilidades, não recomenda votos e não substitui a totalização do TSE. Uma sessão pode consumir **2 chamadas por modelo + 1 para o relator**. O app permite reunião manual e atualização opcional a cada dez minutos quando houver boletim novo e a aba estiver aberta, com intervalo mínimo no servidor de nove minutos. Se um modelo não responder, aparece como indisponível, sem forjar participação.
-
-**Observação:** recursos gratuitos podem ser retirados, sofrer erros HTTP 429, ou exigir políticas adicionais de conta sem aviso. As chaves não ficam em \`index.html\` nem \`conselho.js\`; os endpoints localizados em \`/api/conselho/status\` e \`/api/conselho/debater\` recebem somente a pergunta/UF. O número que aparece como "ativado" indica chave presente, não comprovação prévia de disponibilidade do serviço. O console no Termux precisa ficar executando.
-
-O código é validado com \`python -m unittest discover -s tests -v\`, \`python -m py_compile\` e \`node --check\` no GitHub Actions. A validação é sintática/unitária com respostas simuladas; é preciso configurar chaves e testar a conexão real no próprio S23.
-
-### Diagnóstico seguro do Groq (erro HTTP 401/403)
-
-O botão **Testar autenticação Groq** na aba Analista consulta a API de modelos do Groq pelo servidor Termux e mostra o HTTP sem expor a chave. Também pode abrir `http://127.0.0.1:8080/api/ia/diagnostico` no Chrome; a resposta nunca inclui a chave. `401` significa que a credencial enviada foi rejeitada; `403` indica acesso negado; `429` é limite de consultas e `200` confirma apenas autenticação (não disponibilidade de modelo). Uma variável presente pode conter uma chave inválida: status "configurada" significa apenas que existe um valor na variável. Se uma chave foi publicada em print/chat, revogue-a e gere outra. Após trocar a variável, reinicie `python server.py`.
-
-O Radar também avisa quando o horário do último boletim do TSE está mais de 10 minutos atrasado em relação ao horário do dispositivo (considerando data/hora de Brasília). Uma resposta HTTP 200 do TSE comprova conexão, não necessariamente que há novos votos.
-
-
-## Reparação do S23 — diagnóstico único, mesmo sem API de IA
-
-O app inclui agora duas ferramentas para quando **O Conselho** não consegue autenticar:
-
-- **Diagnóstico do S23**: http://127.0.0.1:8080/diagnostico.html testa se o servidor local está vivo, se consegue ler um boletim TSE, o HTTP devolvido pelo Groq (sem mostrar a chave) e quantas cadeiras do Conselho foram configuradas. Pode copiar o resumo seguro.
-- **Leitura sem IA**: na aba Analista, toque em **Ler dados sem IA**. Um módulo Python calcula diferenças, percentuais de seções e comparação com o último boletim local somente com o TSE, sem Groq, Gemini, chave ou cartão. O resultado é explicitamente marcado como cálculo descritivo, **não IA**.
-
-No Termux, se a pasta já estiver instalada, basta:
-
-\`\`\`bash
-# Pare o servidor anterior com Ctrl+C e execute:
-cd ~/apuracao-2026
-git pull
-python server.py
-\`\`\`
-
-Com o Termux aberto, abra pelo Chrome:
-http://127.0.0.1:8080/diagnostico.html
-
-**Interpretando o resultado:** Servidor OK + TSE OK = o app consegue funcionar para apuração sem IA. Groq HTTP 401 = chave rejeitada pelo Groq, que o programa não consegue corrigir. Groq 200 significa autenticação aceita, não prova de que cada modelo esteja disponível. Cadeira com "chave" significa só que a variável existe. Se você já expôs uma chave em conversa ou print, revogue-a, não a reutilize e não envie outras chaves por mensagem.
-
-A página de diagnóstico e os endpoints não retornam os segredos. A leitura sem IA depende da disponibilidade dos arquivos oficiais do TSE. Nenhum dado eleitoral é inventado em caso de erro.
+Licença e responsabilidade: uso pessoal e educativo; confirme sempre no TSE antes de divulgar números.

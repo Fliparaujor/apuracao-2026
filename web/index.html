@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1526">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="dark">
+<title>Radar 2026 — O Conselho</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icones/icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icones/icone-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="topo">
+  <div class="topo-linha">
+    <div class="marca"><span class="marca-logo" aria-hidden="true"></span><div><b>RADAR 2026</b><small>2º turno · 25/10/2026</small></div></div>
+    <div class="topo-dir">
+      <span id="pill-vivo" class="pill cinza">Conectando…</span>
+      <button id="btn-atualizar" class="icone" title="Atualizar agora" aria-label="Atualizar agora">↻</button>
+    </div>
+  </div>
+  <div class="topo-linha filtros">
+    <select id="sel-escopo" aria-label="Região"></select>
+    <select id="sel-cargo" aria-label="Cargo"><option value="presidente">Presidente</option><option value="governador">Governador</option></select>
+  </div>
+  <div id="faixa-fonte" class="faixa"><span id="txt-fonte">Aguardando o servidor local…</span><span id="txt-prox"></span></div>
+  <div id="faixa-offline" class="faixa alerta" hidden>Sem conexão com o servidor local. Mostrando o último estado guardado neste aparelho (não é ao vivo).</div>
+</header>
+
+<main id="conteudo">
+  <section id="aba-painel" class="aba ativa" aria-label="Painel"></section>
+  <section id="aba-estados" class="aba" aria-label="Estados"></section>
+  <section id="aba-historico" class="aba" aria-label="Histórico"></section>
+  <section id="aba-analista" class="aba" aria-label="Analista"></section>
+  <section id="aba-conselho" class="aba" aria-label="O Conselho"></section>
+  <section id="aba-sistema" class="aba" aria-label="Sistema"></section>
+</main>
+
+<nav class="rodape" aria-label="Seções">
+  <button data-aba="painel" class="ativa"><i>▣</i><span>Painel</span></button>
+  <button data-aba="estados"><i>◫</i><span>Estados</span></button>
+  <button data-aba="historico"><i>∿</i><span>Histórico</span></button>
+  <button data-aba="analista"><i>✦</i><span>Analista</span></button>
+  <button data-aba="conselho"><i>◈</i><span>Conselho</span></button>
+  <button data-aba="sistema"><i>⚙</i><span>Sistema</span></button>
+</nav>
+<div id="toast" class="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

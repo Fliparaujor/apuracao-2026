@@ -1,6 +1,12 @@
 radar-history.sqlite3
 radar-history.sqlite3-*
+*.sqlite3
+*.sqlite3-*
+segredos.env
 .env
 .env.*
 __pycache__/
 *.pyc
+.radar2026/
+node_modules/
+capturas/

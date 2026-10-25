@@ -1,28 +1,53 @@
-name: Validate Radar 2026
+name: Validar Radar 2026
 on:
   push:
-    paths:
-      - 'server.py'
-      - 'inteligencia.py'
-      - 'conselho.py'
-      - 'conselho.js'
-      - 'groq_provider.py'
-      - 'analista.js'
-      - 'ao-vivo.html'
-      - 'tests/**'
-      - '.github/workflows/validate.yml'
+  pull_request:
   workflow_dispatch:
 jobs:
-  checks:
+  backend:
+    name: Backend (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Compilar
+        run: python -m compileall -q radar server.py tools tests
+      - name: Testes unitários, de integração, API, Conselho simulado e segurança
+        run: python -m unittest discover -s tests -v
+      - name: Diagnóstico de linha de comando (TSE simulado)
+        run: |
+          python tests/tse_simulado.py 9090 &
+          sleep 1
+          RADAR_HOME=/tmp/rh RADAR_TSE_BASE=http://127.0.0.1:9090 python -m radar diagnostico --sem-ia
+  frontend:
+    name: Interface mobile (Playwright, viewport S23)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Compile Termux server and intelligence module
-        run: python -m py_compile server.py inteligencia.py conselho.py groq_provider.py relatorio_local.py
-      - name: Unit test calculations and guards
-        run: python -m unittest discover -s tests -v
-      - name: Check frontend syntax
-        run: node --check analista.js && node --check conselho.js && node -e "const h=require('fs').readFileSync('diagnostico.html','utf8');new Function(h.match(/<script>([\\s\\S]*?)<\\/script>/)[1]);"
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Sintaxe do frontend
+        run: node --check web/app.js && node --check web/sw.js && node --check tests/ui_mobile.cjs && python -c "import json;json.load(open('web/manifest.webmanifest'))"
+      - name: Instalar Playwright
+        run: npm i --no-save playwright@1.49.1 && npx playwright install --with-deps chromium
+      - name: Subir TSE simulado + servidor e testar a interface
+        run: |
+          python tests/tse_simulado.py 9090 &
+          sleep 1
+          RADAR_HOME=/tmp/rh RADAR_TSE_BASE=http://127.0.0.1:9090 PORT=8099 python server.py &
+          sleep 4
+          node tests/ui_mobile.cjs http://127.0.0.1:8099 capturas
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-s23
+          path: capturas
