@@ -47,7 +47,7 @@ class CouncilTests(unittest.TestCase):
             self.assertEqual(len(items),2)
             return {"id":s["id"],"name":s["name"],"provider":s["provider"],"role":s["role"],"ok":True,"text":"Discordo."}
         with patch.dict(os.environ,{"GROQ_API_KEY":"dummy","MISTRAL_API_KEY":"","OPENROUTER_API_KEY":"","COHERE_API_KEY":"","GEMINI_API_KEY":""}):
-            with patch.object(conselho, "_last_run",0),patch.object(conselho.inteligencia,"collect",return_value=self.make_evidence()),patch.object(conselho,"seat_result",side_effect=initial),patch.object(conselho,"critique_result",side_effect=critique),patch.object(conselho,"final_summary",return_value=("Há divergências.",True,"GPT OSS")):
+            with patch.object(conselho, "_last_run",-10000000),patch.object(conselho.inteligencia,"collect",return_value=self.make_evidence()),patch.object(conselho,"seat_result",side_effect=initial),patch.object(conselho,"critique_result",side_effect=critique),patch.object(conselho,"final_summary",return_value=("Há divergências.",True,"GPT OSS")):
                 result=conselho.deliberate({"scope":"br","question":"?"})
                 self.assertEqual(result["status"],"relatorio")
                 self.assertEqual(len(result["membros"]),2)
