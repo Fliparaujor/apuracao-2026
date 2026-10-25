@@ -4,6 +4,9 @@ on:
     paths:
       - 'server.py'
       - 'inteligencia.py'
+      - 'conselho.py'
+      - 'conselho.js'
+      - 'groq_provider.py'
       - 'analista.js'
       - 'ao-vivo.html'
       - 'tests/**'
@@ -18,8 +21,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Compile Termux server and intelligence module
-        run: python -m py_compile server.py inteligencia.py
+        run: python -m py_compile server.py inteligencia.py conselho.py groq_provider.py
       - name: Unit test calculations and guards
         run: python -m unittest discover -s tests -v
       - name: Check frontend syntax
-        run: node --check analista.js
+        run: node --check analista.js && node --check conselho.js
