@@ -46,6 +46,9 @@ class Handler(SimpleHTTPRequestHandler):
         path = urllib.parse.urlsplit(self.path).path
         if path in ("/", "/index"):
             self.path = "/ao-vivo.html"
+        if path == "/api/ia/diagnostico":
+            self.diagnose_groq()
+            return
         if path == "/api/conselho/status":
             self.send_json(200, conselho.public_status())
             return
@@ -85,6 +88,40 @@ class Handler(SimpleHTTPRequestHandler):
             # Não expor credenciais, URLs de requisição ou rastros internos.
             print("Falha no módulo de inteligência:", type(err).__name__)
             self.send_json(502, {"erro": "Não foi possível completar a consulta ao TSE ou às IAs neste momento."})
+
+    def diagnose_groq(self):
+        """Validate only authentication; never expose the API key or upstream body."""
+        key = os.environ.get("GROQ_API_KEY", "").strip()
+        if not key:
+            self.send_json(200, {"provedor": "Groq", "http": None, "estado": "sem_chave",
+                "mensagem": "O processo do Termux não recebeu GROQ_API_KEY."})
+            return
+        if not key.startswith("gsk_"):
+            self.send_json(200, {"provedor": "Groq", "http": None, "estado": "formato",
+                "mensagem": "Prefixo da chave incorreto; gere uma chave no GroqCloud."})
+            return
+        try:
+            req = urllib.request.Request(
+                "https://api.groq.com/openai/v1/models",
+                headers={"Authorization": "Bearer " + key, "Accept": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=12) as response:
+                code = response.status
+            self.send_json(200, {"provedor": "Groq", "http": code, "estado": "autenticada",
+                "mensagem": "A autenticação foi aceita. Isso não comprova a disponibilidade de cada modelo."})
+        except urllib.error.HTTPError as e:
+            code = e.code
+            messages = {
+                401: "O Groq rejeitou a chave. Se ela apareceu em um print/chat, revogue-a, gere outra e reinicie o servidor.",
+                403: "A conta ou o projeto não tem permissão. Confira o painel do GroqCloud.",
+                429: "O limite de consultas foi atingido. Aguarde a renovação da cota."
+            }
+            self.send_json(200, {"provedor": "Groq", "http": code,
+                "estado": "rejeitada" if code in (401, 403) else "erro",
+                "mensagem": messages.get(code, "Groq respondeu HTTP " + str(code) + ".")})
+        except (urllib.error.URLError, TimeoutError, OSError):
+            self.send_json(200, {"provedor": "Groq", "http": None, "estado": "rede",
+                "mensagem": "Falha ao alcançar a API do Groq. Verifique internet e tente de novo."})
 
     def proxy_tse(self, relative: str):
         if not allowed(relative):
