@@ -158,3 +158,27 @@ O código é validado com \`python -m unittest discover -s tests -v\`, \`python 
 O botão **Testar autenticação Groq** na aba Analista consulta a API de modelos do Groq pelo servidor Termux e mostra o HTTP sem expor a chave. Também pode abrir `http://127.0.0.1:8080/api/ia/diagnostico` no Chrome; a resposta nunca inclui a chave. `401` significa que a credencial enviada foi rejeitada; `403` indica acesso negado; `429` é limite de consultas e `200` confirma apenas autenticação (não disponibilidade de modelo). Uma variável presente pode conter uma chave inválida: status "configurada" significa apenas que existe um valor na variável. Se uma chave foi publicada em print/chat, revogue-a e gere outra. Após trocar a variável, reinicie `python server.py`.
 
 O Radar também avisa quando o horário do último boletim do TSE está mais de 10 minutos atrasado em relação ao horário do dispositivo (considerando data/hora de Brasília). Uma resposta HTTP 200 do TSE comprova conexão, não necessariamente que há novos votos.
+
+
+## Reparação do S23 — diagnóstico único, mesmo sem API de IA
+
+O app inclui agora duas ferramentas para quando **O Conselho** não consegue autenticar:
+
+- **Diagnóstico do S23**: http://127.0.0.1:8080/diagnostico.html testa se o servidor local está vivo, se consegue ler um boletim TSE, o HTTP devolvido pelo Groq (sem mostrar a chave) e quantas cadeiras do Conselho foram configuradas. Pode copiar o resumo seguro.
+- **Leitura sem IA**: na aba Analista, toque em **Ler dados sem IA**. Um módulo Python calcula diferenças, percentuais de seções e comparação com o último boletim local somente com o TSE, sem Groq, Gemini, chave ou cartão. O resultado é explicitamente marcado como cálculo descritivo, **não IA**.
+
+No Termux, se a pasta já estiver instalada, basta:
+
+\`\`\`bash
+# Pare o servidor anterior com Ctrl+C e execute:
+cd ~/apuracao-2026
+git pull
+python server.py
+\`\`\`
+
+Com o Termux aberto, abra pelo Chrome:
+http://127.0.0.1:8080/diagnostico.html
+
+**Interpretando o resultado:** Servidor OK + TSE OK = o app consegue funcionar para apuração sem IA. Groq HTTP 401 = chave rejeitada pelo Groq, que o programa não consegue corrigir. Groq 200 significa autenticação aceita, não prova de que cada modelo esteja disponível. Cadeira com "chave" significa só que a variável existe. Se você já expôs uma chave em conversa ou print, revogue-a, não a reutilize e não envie outras chaves por mensagem.
+
+A página de diagnóstico e os endpoints não retornam os segredos. A leitura sem IA depende da disponibilidade dos arquivos oficiais do TSE. Nenhum dado eleitoral é inventado em caso de erro.
