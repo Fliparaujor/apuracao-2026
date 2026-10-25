@@ -28,6 +28,8 @@ else
 fi
 cd "$DEST"
 mkdir -p "$HOME/.radar2026" && chmod 700 "$HOME/.radar2026"
+# Quando executado via "curl | bash", a entrada padrão é o script: religa ao terminal para as perguntas.
+if [ ! -t 0 ] && [ -r /dev/tty ]; then exec </dev/tty 2>/dev/null || true; fi
 echo
 echo "Verificando o ambiente…"
 "$PY" -m radar diagnostico --sem-ia || echo "(O TSE pode estar indisponível agora; o app avisa na tela.)"
