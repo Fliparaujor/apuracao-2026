@@ -120,13 +120,20 @@ const a=names[0],b=names[1];const lines=[a,b].map(n=>'<path d="'+path(n)+'" fill
 let grid="";for(const v of [0,25,50,75,100])grid+='<line x1="'+pad.l+'" y1="'+y(v)+'" x2="'+(w-pad.r)+'" y2="'+y(v)+'" stroke="#2b3d52" stroke-dasharray="3 5"/><text x="'+(pad.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end" fill="#8da1ba" font-size="12">'+v+'%</text>';
 const start=new Date(pts[0].t).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});const end=new Date(pts[pts.length-1].t).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 el.innerHTML='<svg viewBox="0 0 '+w+' '+height+'" role="img" aria-label="Evolução dos percentuais da apuração, registrada no aparelho">'+grid+lines+'<text x="'+pad.l+'" y="'+(height-7)+'" fill="#8da1ba" font-size="12">'+start+'</text><text x="'+(w-pad.r)+'" y="'+(height-7)+'" fill="#8da1ba" text-anchor="end" font-size="12">'+end+'</text></svg>';}
-function renderDashboard(){const d=snapshot(scope);$("duelCard").innerHTML='<div class="card-head"><h2>Presidente · '+esc(scopeNames[scope]||scope)+'</h2><small>2º turno · votos válidos</small></div>'+headline(d)+(d?'<div class="legend"><span>'+esc(d.date)+'</span><span>'+dec(d.counted)+'% apurado</span></div><div class="progress" style="margin-top:6px"><i style="width:'+Math.min(100,d.counted)+'%"></i></div>':'');
+function sourceAgeMinutes(value){
+  const m=String(value||"").match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+  if(!m)return null;
+  const time=new Date(m[3]+"-"+m[2]+"-"+m[1]+"T"+m[4]+":"+m[5]+":"+(m[6]||"00")+"-03:00").getTime();
+  const minutes=Math.floor((Date.now()-time)/60000);
+  return Number.isFinite(minutes)&&minutes>=0?minutes:null;
+}
+function renderDashboard(){const d=snapshot(scope);const age=sourceAgeMinutes(d?.date);const stale=!!d&&!d.finished&&age!==null&&age>10;$("duelCard").innerHTML='<div class="card-head"><h2>Presidente · '+esc(scopeNames[scope]||scope)+'</h2><small>2º turno · votos válidos</small></div>'+headline(d)+(d?'<div class="legend"><span>'+esc(d.date)+'</span><span>'+dec(d.counted)+'% apurado</span></div><div class="progress" style="margin-top:6px"><i style="width:'+Math.min(100,d.counted)+'%"></i></div>':'');
 $("numbers").innerHTML=d?metrics(d):'<div class="empty span2">Sem dados disponíveis</div>';
 $("insights").innerHTML=analysis(scope,d);$("an-pill").className="pill"+(d&&d.valid?" ok":" warn");$("an-pill").textContent=d&&d.valid?"Parcial oficial":"Aguardando";
-$("source-time").innerHTML=d?"TSE: <strong>"+esc(d.date)+"</strong> · "+esc(scopeNames[scope]||scope):"TSE: <strong>sem resposta válida</strong>";
+$("source-time").innerHTML=d?"TSE: <strong>"+esc(d.date)+"</strong> · "+esc(scopeNames[scope]||scope)+(stale?' · <span class="pill warn">Último boletim há '+age+' min</span>':""):"TSE: <strong>sem resposta válida</strong>";
 const err=errors["pres-"+scope];$("error").hidden=!err;$("error").textContent=err?"Não foi possível consultar "+scopeNames[scope]+": "+err+". Se já havia dados, eles permanecem na tela como última parcial recebida. Consulte o TSE oficial se o problema persistir.":"";
 $("status-pill").className="pill "+(err?"warn":d&&d.valid?"ok":"warn");$("status-pill").textContent=err?"Conexão falhou":d&&d.valid?(d.finished?"Totalizado":"Apuração parcial"):"Sem votos divulgados";
-$("livepill").innerHTML='<span class="dot'+(d&&d.valid&&!err?" live":"")+'"></span>'+(err?"Falha na fonte":d&&d.valid?"TSE conectado":"Aguardando votos");
+$("livepill").innerHTML='<span class="dot'+(d&&d.valid&&!err&&!stale?" live":"")+'"></span>'+(err?"Falha na fonte":stale?"Boletim antigo":d&&d.valid?"TSE conectado":"Aguardando votos");
 chart(scope);
 }
 function renderStates(){let a=Object.keys(STATES).map(k=>[k,snapshot(k)]);if(sorting==="alphabet")a.sort((x,y)=>STATES[x[0]].localeCompare(STATES[y[0]],"pt-BR"));if(sorting==="apur")a.sort((x,y)=>(y[1]?.counted||0)-(x[1]?.counted||0));if(sorting==="gap")a.sort((x,y)=>((y[1]?.cands[0]?.pct||0)-(y[1]?.cands[1]?.pct||0))-((x[1]?.cands[0]?.pct||0)-(x[1]?.cands[1]?.pct||0)));
