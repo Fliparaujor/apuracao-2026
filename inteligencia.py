@@ -305,13 +305,23 @@ def run(request: dict):
     question = str(request.get("question", "")).strip()[:500]
     if scope not in PERMITTED or mode not in ("resumo", "investigar", "cenarios"):
         raise ValueError("Região ou modo inválido.")
-    if not os.environ.get("GEMINI_API_KEY", "").strip():
-        raise RuntimeError("IA não configurada. Adicione GEMINI_API_KEY no Termux; os resultados oficiais continuam disponíveis sem IA.")
+    groq_ready = bool(os.environ.get("GROQ_API_KEY", "").strip())
+    gemini_ready = bool(os.environ.get("GEMINI_API_KEY", "").strip())
+    if not groq_ready and not gemini_ready:
+        raise RuntimeError("IA não configurada. Use uma chave Groq Free (sem faturamento) ou uma chave Gemini Free no Termux.")
     evidence = collect(scope, mode)
-    answer = ask_gemini(evidence, mode, question)
+    if groq_ready:
+        import groq_provider
+        answer = groq_provider.analyze(evidence, mode, question, SYSTEM)
+        active_model = "Groq / " + groq_provider.MODEL
+        provider = "Groq Free"
+    else:
+        answer = ask_gemini(evidence, mode, question)
+        active_model = MODEL
+        provider = "Gemini"
     selected = evidence["escopo"]
     return {
-        "analise": answer, "modelo": MODEL,
+        "analise": answer, "modelo": active_model, "provedor": provider,
         "escopo": scope, "horario_tse": selected["horario_tse"],
         "secoes_apuradas_pct": selected["secoes_processadas_pct"],
         "total_ufs_consultadas": len(evidence["estados_parciais"]),
@@ -322,9 +332,13 @@ def run(request: dict):
     }
 
 def status():
+    groq_ready = bool(os.environ.get("GROQ_API_KEY", "").strip())
+    gemini_ready = bool(os.environ.get("GEMINI_API_KEY", "").strip())
+    active = "Groq" if groq_ready else ("Gemini" if gemini_ready else "Nenhum")
     return {
-        "configurada": bool(os.environ.get("GEMINI_API_KEY", "").strip()),
-        "modelo": MODEL,
+        "configurada": groq_ready or gemini_ready,
+        "provedor": active,
+        "modelo": "openai/gpt-oss-120b" if groq_ready else (MODEL if gemini_ready else ""),
         "fonte": "TSE",
-        "observacao": "A chave fica apenas no Termux, não no GitHub nem no navegador."
+        "observacao": "Tokens privados só no Termux; nenhuma conta de faturamento é criada pelo app."
     }
