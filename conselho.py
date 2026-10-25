@@ -31,6 +31,8 @@ SEATS = [
      "model": "openrouter/free", "role": "Histórico"},
     {"id": "cohere", "name": "Command A+", "provider": "Cohere", "key": "COHERE_API_KEY",
      "model": "command-a-plus-05-2026", "role": "Auditoria"},
+    {"id": "cloudflare", "name": "Nemotron 3 120B", "provider": "Cloudflare", "key": "CLOUDFLARE_API_TOKEN",
+     "model": "@cf/nvidia/nemotron-3-120b-a12b", "role": "Investigação"},
     {"id": "gemini", "name": "Gemini Flash", "provider": "Gemini", "key": "GEMINI_API_KEY",
      "model": os.environ.get("GEMINI_MODEL", "gemini-3.8-flash"), "role": "Contraponto"},
 ]
@@ -58,7 +60,8 @@ ROLES = {
     "Regional": "Examine padrões regionais com escopos e horas explícitos. Aponte explicações ALTERNATIVAS e o que faltaria para distingui-las.",
     "Histórico": "Compare o dado histórico do primeiro turno com cautela; não atribua transferência individual de votos. Aponte limites de comparabilidade.",
     "Auditoria": "Procure incoerências, alegações não ancoradas, diferenças entre percentuais apurados e amostras. Verifique as ressalvas obrigatórias.",
-    "Contraponto": "Identifique pressupostos ocultos; construa explicações alternativas compatíveis com os números e proponha como testá-las."
+    "Contraponto": "Identifique pressupostos ocultos; construa explicações alternativas compatíveis com os números e proponha como testá-las.",
+    "Investigação": "Procure relações possíveis entre diferenças regionais, taxas de seções e horários. Formule testes e evite atribuir causalidade sem evidências."
 }
 LINKS = {
     "Groq": "https://console.groq.com/keys",
@@ -66,6 +69,7 @@ LINKS = {
     "OpenRouter": "https://openrouter.ai/settings/keys",
     "Cohere": "https://dashboard.cohere.com/api-keys",
     "Gemini": "https://aistudio.google.com/api-keys",
+    "Cloudflare": "https://dash.cloudflare.com/?to=/:account/ai",
 }
 ENDPOINTS = {
     "Groq": "https://api.groq.com/openai/v1/chat/completions",
@@ -73,7 +77,15 @@ ENDPOINTS = {
     "OpenRouter": "https://openrouter.ai/api/v1/chat/completions",
     "Cohere": "https://api.cohere.com/v2/chat",
     "Gemini": "https://generativelanguage.googleapis.com/v1beta/models/",
+    "Cloudflare": "https://api.cloudflare.com/client/v4/accounts/",
 }
+
+def has_key(seat: dict) -> bool:
+    if not os.environ.get(seat["key"], "").strip():
+        return False
+    if seat["provider"] == "Cloudflare":
+        return bool(os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip())
+    return True
 
 def public_status() -> dict:
     return {
@@ -81,11 +93,11 @@ def public_status() -> dict:
         "members": [{
             "id": s["id"], "name": s["name"], "provider": s["provider"],
             "role": s["role"], "model": s["model"],
-            "configured": bool(os.environ.get(s["key"], "").strip()),
+            "configured": has_key(s),
             "setup": LINKS[s["provider"]]
         } for s in SEATS],
-        "active_members": sum(bool(os.environ.get(s["key"], "").strip()) for s in SEATS),
-        "independent_providers": len({s["provider"] for s in SEATS if os.environ.get(s["key"], "").strip()}),
+        "active_members": sum(has_key(s) for s in SEATS),
+        "independent_providers": len({s["provider"] for s in SEATS if has_key(s)}),
         "max_active": len(SEATS),
         "min_interval_seconds": COOLDOWN_SECONDS,
         "note": "Sem cartão neste app. As chaves ficam apenas no servidor local e nunca são devolvidas ao navegador. Cotas gratuitas não são ilimitadas."
@@ -138,6 +150,17 @@ def consult(seat: dict, instructions: str, user: str, limit: int = MAX_OUTPUT) -
              "generationConfig": {"maxOutputTokens": limit, "temperature": 0.25}},
             {"x-goog-api-key": key})
         output = "\n".join(str(p.get("text","")) for c in data.get("candidates",[]) for p in (c.get("content") or {}).get("parts",[]) if isinstance(p,dict)).strip()
+    elif provider == "Cloudflare":
+        import re
+        account = os.environ.get("CLOUDFLARE_ACCOUNT_ID","").strip()
+        if not re.fullmatch(r"[0-9a-fA-F]{32}", account):
+            raise RuntimeError("CLOUDFLARE_ACCOUNT_ID inválido. Copie o ID de 32 caracteres do painel Workers AI.")
+        # Only a Workers AI model confirmed available on Free; never route a third-party paid model.
+        url = ENDPOINTS["Cloudflare"]+account+"/ai/v1/chat/completions"
+        data = http_json(url,
+            {"model":model,"messages":messages,"max_tokens":limit,"temperature":0.2,"stream":False},
+            {"Authorization":"Bearer "+key,"cf-aig-gateway-id":"default"})
+        output = content_text(((data.get("choices") or [{}])[0].get("message") or {}).get("content"))
     elif provider == "Cohere":
         data = http_json(ENDPOINTS[provider],
             {"model": model, "messages": messages, "max_tokens": limit, "temperature": 0.2, "stream": False},
@@ -240,7 +263,7 @@ def deliberate(body: dict) -> dict:
     question=str(body.get("question","")).strip()[:360]
     if scope not in inteligencia.PERMITTED:
         raise ValueError("Região inválida.")
-    seats=[s for s in SEATS if os.environ.get(s["key"],"").strip()]
+    seats=[s for s in SEATS if has_key(s)]
     if len(seats)<2:
         raise ValueError("O Conselho requer pelo menos dois modelos configurados. Uma chave Groq ativa GPT-OSS e Qwen, se ambos estiverem disponíveis no plano gratuito.")
     # One in-flight / cooldown at a time. Do not burn the free daily allowance.
