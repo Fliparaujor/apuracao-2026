@@ -1,0 +1,6 @@
+radar-history.sqlite3
+radar-history.sqlite3-*
+.env
+.env.*
+__pycache__/
+*.pyc
