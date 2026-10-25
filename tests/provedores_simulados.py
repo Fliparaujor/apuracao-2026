@@ -50,6 +50,8 @@ def requisitar_simulado(url: str, metodo: str = "GET", headers: dict | None = No
         raise classificar_http(500, "boom")
     if "semrede" in tok:
         raise ErroProvedor("rede", "Falha de rede simulada.")
+    if "upstream" in tok and metodo == "POST" and corpo and str(corpo.get("model", "")).startswith("deepseek"):
+        raise classificar_http(429, '{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"deepseek/deepseek-r1:free is temporarily rate-limited upstream. Please retry shortly"}}}')
     # ---- listagens
     if "api.groq.com/openai/v1/models" in url:
         return 200, {"data": [{"id": "openai/gpt-oss-120b", "active": True}, {"id": "whisper-large-v3"}, {"id": "qwen/qwen3-32b"}, {"id": "llama-3.1-8b-instant"}]}, {}

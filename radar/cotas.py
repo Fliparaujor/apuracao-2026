@@ -6,6 +6,7 @@ concorrência limitada e cancelamento. Nenhuma função aqui habilita cobrança.
 """
 from __future__ import annotations
 
+import re
 import threading
 import time
 from collections import deque
@@ -185,6 +186,8 @@ class Cotas:
             if http == 429:
                 pausa = float(retry_after) if retry_after and retry_after > 0 else 60.0
                 pausa = min(pausa, 15 * 60)
+                if re.search(r"upstream|temporarily rate-limited|model is overloaded|try another model", erro or "", re.IGNORECASE):
+                    pausa = min(pausa, 5.0)  # limite de um modelo específico, não da chave: não trava o provedor
                 e.cooldown_ate = time.monotonic() + pausa
                 e.motivo_cooldown = "limite de cota HTTP 429"
                 if retry_after and retry_after >= 3600:

@@ -117,6 +117,19 @@ class ConselhoSimulado(CasoBase):
         self.assertTrue(any(x["citado"].startswith("77") for x in item["nao_suportados"]))
         self.assertIn("prognóstico de vitória", item["alertas"])
 
+    def test_modelo_limitado_upstream_troca_para_alternativa(self):
+        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "sk-or-v1-upstream", "GEMINI_API_KEY": "", "MISTRAL_API_KEY": ""}):
+            provedores.limpar_cache_auth()
+            j = esperar(conselho.iniciar_reuniao("br", "?"))
+        r = j["resultado"]
+        cad = [c for c in r["cadeiras"] if c["provedor"] == "openrouter" and c.get("modelo_original") == "deepseek/deepseek-r1:free"]
+        self.assertTrue(cad, [c for c in r["cadeiras"] if c["provedor"] == "openrouter"])
+        self.assertTrue(cad[0]["participa"])
+        self.assertEqual(cad[0]["modelo"], "meta-llama/llama-3.3-70b-instruct:free")
+        self.assertTrue(cad[0]["rodada1"]["trocas_de_modelo"])
+        from radar.cotas import COTAS
+        self.assertLessEqual(COTAS.estado()["provedores"]["openrouter"]["cooldown_restante_s"], 5)
+
     def test_cancelamento(self):
         original = sim.requisitar_simulado
 

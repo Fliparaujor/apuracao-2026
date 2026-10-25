@@ -83,7 +83,11 @@ def montar_cadeiras(status_provedores: list[dict] | None = None) -> dict:
         adicionou = False
         for s, modelos in filas:
             if volta < len(modelos) and volta < s.get("assentos_maximos", 1):
-                cadeiras.append({"provedor": s["id"], "provedor_nome": s["nome"], "modelo": modelos[volta]})
+                # Reservas: primeiro os modelos não usados em outra cadeira; depois os demais da conta.
+                nao_usados = [m for m in modelos[s.get("assentos_maximos", 1):] if m != modelos[volta]]
+                outros = [m for m in modelos if m != modelos[volta] and m not in nao_usados]
+                cadeiras.append({"provedor": s["id"], "provedor_nome": s["nome"], "modelo": modelos[volta],
+                                 "alternativas": (nao_usados + outros)[:4]})
                 adicionou = True
         if not adicionou:
             break
@@ -137,19 +141,39 @@ def status_publico() -> dict:
 
 # ----------------------------------------------------------------- rodadas
 
+_RX_MODELO_LIMITADO = re.compile(r"upstream|temporarily rate-limited|model is overloaded|try another model", re.IGNORECASE)
+
+
+def _trocavel(exc: ErroProvedor) -> bool:
+    """Erro que diz respeito ao MODELO (não à chave nem à cota da conta): vale tentar outro modelo."""
+    if exc.categoria in ("modelo_indisponivel", "formato", "servidor"):
+        return True
+    return exc.categoria == "limite" and bool(_RX_MODELO_LIMITADO.search(str(exc)))
+
+
 def _chamar(cadeira: dict, sistema: str, usuario: str, max_tokens: int, cancelamento, contexto: str) -> dict:
     p = provedores.obter(cadeira["provedor"])
     inicio = time.monotonic()
-    try:
-        r = p.conversar(cadeira["modelo"], [{"role": "system", "content": sistema}, {"role": "user", "content": usuario}],
-                        max_tokens=max_tokens, temperatura=0.2, cancelamento=cancelamento, contexto=contexto)
-        return {"ok": True, "texto": r["texto"], "modelo_real": r["modelo"], "duracao_ms": r["duracao_ms"],
-                "tokens_entrada": r["tokens_entrada"], "tokens_saida": r["tokens_saida"]}
-    except Cancelado:
-        return {"ok": False, "erro": "cancelado", "categoria": "cancelado", "duracao_ms": int((time.monotonic() - inicio) * 1000)}
-    except ErroProvedor as exc:
-        return {"ok": False, "erro": config.mascarar(str(exc))[:220], "categoria": exc.categoria, "http": exc.http,
-                "duracao_ms": int((time.monotonic() - inicio) * 1000)}
+    mensagens = [{"role": "system", "content": sistema}, {"role": "user", "content": usuario}]
+    tentativas = [cadeira["modelo"]] + [m for m in cadeira.get("alternativas") or [] if m != cadeira["modelo"]][:2]
+    trocas = []
+    for i, modelo in enumerate(tentativas):
+        try:
+            r = p.conversar(modelo, mensagens, max_tokens=max_tokens, temperatura=0.2, cancelamento=cancelamento, contexto=contexto)
+            if modelo != cadeira["modelo"]:
+                cadeira["modelo_original"] = cadeira.get("modelo_original", cadeira["modelo"])
+                cadeira["modelo"] = modelo
+            return {"ok": True, "texto": r["texto"], "modelo_real": r["modelo"], "duracao_ms": r["duracao_ms"],
+                    "tokens_entrada": r["tokens_entrada"], "tokens_saida": r["tokens_saida"], "trocas_de_modelo": trocas}
+        except Cancelado:
+            return {"ok": False, "erro": "cancelado", "categoria": "cancelado", "duracao_ms": int((time.monotonic() - inicio) * 1000)}
+        except ErroProvedor as exc:
+            erro = config.mascarar(str(exc))[:220]
+            if i + 1 < len(tentativas) and _trocavel(exc):
+                trocas.append({"de": modelo, "para": tentativas[i + 1], "motivo": erro[:120]})
+                continue
+            return {"ok": False, "erro": erro, "categoria": exc.categoria, "http": exc.http,
+                    "duracao_ms": int((time.monotonic() - inicio) * 1000), "trocas_de_modelo": trocas}
 
 
 def _paralelo(cadeiras: list[dict], fn, cancelamento) -> None:
