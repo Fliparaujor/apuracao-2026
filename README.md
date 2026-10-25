@@ -6,7 +6,7 @@ Novo painel mobile-first para acompanhar a totalização presidencial do segundo
 
 **[ABRIR O RADAR AO VIVO](https://raw.githack.com/Fliparaujor/apuracao-2026/main/ao-vivo.html)**
 
-No Chrome Android, use o menu `⋮` → **Adicionar à tela inicial** (ou **Instalar app**, se disponível). Precisa de internet para consultar o TSE. Esse endereço é servido por um serviço estático externo, não é hospedagem oficial do GitHub Pages.
+No Chrome Android, use o menu `⋮` → **Adicionar à tela inicial** (ou **Instalar app**, se disponível). Precisa de internet para consultar o TSE. Esse endereço é servido por um serviço estático externo, não é hospedagem oficial do GitHub Pages. Na primeira visita, o rawgit.hack mostra uma tela de confirmação de segurança: revise o endereço e continue se estiver correto.
 
 ### Rodar em localhost, diretamente no celular (Termux)
 
@@ -18,12 +18,12 @@ pkg update
 pkg install -y git python
 git clone https://github.com/Fliparaujor/apuracao-2026.git
 cd apuracao-2026
-python -m http.server 8080 --bind 127.0.0.1
+python server.py
 ```
 
 3. Abra **http://127.0.0.1:8080/ao-vivo.html** no Chrome do S23.
 
-O Termux deve permanecer com o servidor ligado para o endereço localhost funcionar.
+O Termux deve permanecer com o servidor ligado para o endereço localhost funcionar. O servidor local faz proxy restrito dos JSON oficiais e evita bloqueio CORS ao abrir pelo localhost.
 
 ### Hospedagem recomendada (opcional)
 
