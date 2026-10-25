@@ -15,6 +15,7 @@ import urllib.parse
 import urllib.request
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import inteligencia
 
 ROOT = Path(__file__).resolve().parent
 ORIGIN = "https://resultados.tse.jus.br/oficial/ele2026/"
@@ -44,10 +45,39 @@ class Handler(SimpleHTTPRequestHandler):
         path = urllib.parse.urlsplit(self.path).path
         if path in ("/", "/index"):
             self.path = "/ao-vivo.html"
+        if path == "/api/ia/status":
+            self.send_json(200, inteligencia.status())
+            return
         if path.startswith("/api/tse/"):
             self.proxy_tse(path[len("/api/tse/"):])
             return
         return super().do_GET()
+
+    def do_POST(self):
+        path = urllib.parse.urlsplit(self.path).path
+        if path != "/api/ia/analisar":
+            self.send_json(404, {"erro": "Endpoint inexistente."})
+            return
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if not (0 < size <= 4096):
+                self.send_json(413, {"erro": "Mensagem muito grande."})
+                return
+            if "application/json" not in self.headers.get("Content-Type", ""):
+                self.send_json(415, {"erro": "Envie application/json."})
+                return
+            payload = json.loads(self.rfile.read(size))
+            if not isinstance(payload, dict):
+                raise ValueError("Envie um objeto JSON.")
+            self.send_json(200, inteligencia.run(payload))
+        except (ValueError, json.JSONDecodeError) as err:
+            self.send_json(400, {"erro": str(err)[:300]})
+        except RuntimeError as err:
+            self.send_json(503, {"erro": str(err)[:300]})
+        except Exception as err:
+            # Não expor credenciais, URLs de requisição ou rastros internos.
+            print("Falha no módulo de inteligência:", type(err).__name__)
+            self.send_json(502, {"erro": "Não foi possível consultar o TSE ou o Gemini neste momento."})
 
     def proxy_tse(self, relative: str):
         if not allowed(relative):
@@ -95,6 +125,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     print("Radar 2026 rodando em http://127.0.0.1:%s/ao-vivo.html" % PORT)
+    print("Analista IA: " + ("configurado" if inteligencia.status()["configurada"] else "aguardando GEMINI_API_KEY"))
     print("Mantenha o Termux aberto. Para encerrar: CTRL+C")
     with ThreadingHTTPServer(("127.0.0.1", PORT), Handler) as httpd:
         httpd.serve_forever()
