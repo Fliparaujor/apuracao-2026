@@ -28,6 +28,11 @@ div.innerHTML=[
 '<button data-question="Calcule cenários condicionais com volumes hipotéticos de votos adicionais. Não preveja vitória.">Cenários</button>',
 '</div>',
 '<div class="row" style="align-items:center;justify-content:space-between"><button class="ai-submit" id="ai-submit">✦ Analisar agora</button><label class="ai-check"><input type="checkbox" id="ai-auto"> Auto a cada 3 min*</label></div>',
+'<div style="display:flex;gap:9px;flex-wrap:wrap;margin:12px 0">',
+'<button id="ai-local" type="button" class="ai-submit" style="background:#213d5a;color:#d8ecff;border:1px solid #527497">Ler dados sem IA</button>',
+'<a href="diagnostico.html" style="font-size:13px;align-self:center">Diagnóstico do sistema</a>',
+'</div>',
+
 '<p class="ai-meta">* Somente com a aba aberta, dados novos e o Termux funcionando. Limites da API gratuita continuam valendo.</p>',
 '<button type="button" id="ai-test" style="color:#bddbff;border:1px solid #344b65;border-radius:10px;background:#162841;padding:9px 12px;font-size:12px;font-weight:700">Testar autenticação Groq</button>',
 '<div class="ai-meta" role="status" id="ai-test-result">Este teste não exibe sua chave nem os detalhes da credencial.</div>',
@@ -107,6 +112,24 @@ $("ai-test").addEventListener("click",async()=>{
     statusLine(data.estado==="autenticada"?"Groq autenticado":"Groq não autenticado",data.estado==="autenticada");
   }catch(e){$("ai-test-result").textContent="Não consegui verificar a chave: "+(e.name==="AbortError"?"tempo limite de rede":e.message);}
   finally{button.disabled=false;}
+});
+$("ai-local").addEventListener("click",async()=>{
+  const btn=$("ai-local");btn.disabled=true;
+  $("ai-output").textContent="Lendo números oficiais do TSE, sem modelo de IA nem necessidade de chave…";
+  $("ai-source").textContent="";
+  try{
+    const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),26000);
+    let res;try{res=await fetch("/api/relatorio?scope="+encodeURIComponent(region()),{cache:"no-store",signal:ctrl.signal});}
+    finally{clearTimeout(timeout);}
+    const data=await res.json();
+    if(!res.ok||!data.ok)throw Error(data.erro||("HTTP "+res.status));
+    $("ai-output").textContent=(data.paragrafos||[]).join("\n\n");
+    $("ai-source").textContent="Leitura descritiva automática — NÃO é IA nem debate de modelos. Fonte TSE: "+data.fonte+" · Boletim "+data.horario_tse;
+    statusLine("Dados TSE lidos",true);
+  }catch(e){
+    $("ai-output").textContent="Sem dados oficiais disponíveis para gerar relatório. "+(e.name==="AbortError"?"Consulta demorou mais que o esperado.":e.message);
+    statusLine("Falha ao ler TSE",false);
+  }finally{btn.disabled=false;}
 });
 $("ai-submit").addEventListener("click",analyze);
 $("ai-auto").addEventListener("change",e=>state.auto=e.target.checked);
