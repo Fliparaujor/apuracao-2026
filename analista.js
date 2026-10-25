@@ -29,6 +29,8 @@ div.innerHTML=[
 '</div>',
 '<div class="row" style="align-items:center;justify-content:space-between"><button class="ai-submit" id="ai-submit">✦ Analisar agora</button><label class="ai-check"><input type="checkbox" id="ai-auto"> Auto a cada 3 min*</label></div>',
 '<p class="ai-meta">* Somente com a aba aberta, dados novos e o Termux funcionando. Limites da API gratuita continuam valendo.</p>',
+'<button type="button" id="ai-test" style="color:#bddbff;border:1px solid #344b65;border-radius:10px;background:#162841;padding:9px 12px;font-size:12px;font-weight:700">Testar autenticação Groq</button>',
+'<div class="ai-meta" role="status" id="ai-test-result">Este teste não exibe sua chave nem os detalhes da credencial.</div>',
 '</section>',
 '<section class="card"><div class="card-head"><h2>Relatório do analista</h2><small id="ai-region">Brasil · 2º turno</small></div><div id="ai-output" class="ai-text">Conecte a IA e toque em “Analisar agora”.</div><div id="ai-source" class="ai-meta"></div></section>'
 ].join("");
@@ -56,9 +58,9 @@ async function status(){
     let response;try{response=await fetch("/api/ia/status",{cache:"no-store",signal:c.signal});}finally{clearTimeout(t);}
     if(!response.ok)throw Error("Servidor antigo");
     const data=await response.json();state.configured=!!data.configurada;
-    statusLine(state.configured?("IA · "+data.modelo):"Sem chave",state.configured);
+    statusLine(state.configured?("Chave presente · "+data.modelo):"Sem chave",false);
     $("ai-guide").hidden=state.configured;$("ai-submit").disabled=!state.configured;
-    if(!state.last)$("ai-output").textContent=state.configured?"IA conectada. Faça sua pergunta e pressione Analisar agora.":"Configure a chave Groq gratuita com as instruções acima. O painel do TSE continua operando mesmo sem a IA.";
+    if(!state.last)$("ai-output").textContent=state.configured?"O servidor recebeu uma chave; clique em Testar autenticação Groq para validar o acesso antes da análise.":"Configure uma chave gratuita no Termux. O painel do TSE continua operando mesmo sem a IA.";
   }catch(e){
     state.configured=false;$("ai-guide").hidden=false;$("ai-submit").disabled=true;
     statusLine("Atualize o Termux",false);
@@ -92,6 +94,20 @@ btn.addEventListener("click",()=>{
 });
 nav.querySelectorAll("[data-tab]").forEach(b=>{if(b!==btn)b.addEventListener("click",()=>state.active=false)});
 $("scope").addEventListener("change",regionLabel);
+$("ai-test").addEventListener("click",async()=>{
+  const button=$("ai-test");button.disabled=true;
+  $("ai-test-result").textContent="Testando autorização no Groq, sem exibir a chave…";
+  try{
+    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),15000);
+    let response;try{response=await fetch("/api/ia/diagnostico",{cache:"no-store",signal:ctl.signal});}
+    finally{clearTimeout(timer);}
+    if(!response.ok)throw Error("Atualize o projeto e reinicie o servidor Termux.");
+    const data=await response.json();
+    $("ai-test-result").textContent="Groq HTTP: "+(data.http||"—")+" · "+data.mensagem;
+    statusLine(data.estado==="autenticada"?"Groq autenticado":"Groq não autenticado",data.estado==="autenticada");
+  }catch(e){$("ai-test-result").textContent="Não consegui verificar a chave: "+(e.name==="AbortError"?"tempo limite de rede":e.message);}
+  finally{button.disabled=false;}
+});
 $("ai-submit").addEventListener("click",analyze);
 $("ai-auto").addEventListener("change",e=>state.auto=e.target.checked);
 document.querySelectorAll("[data-question]").forEach(b=>b.addEventListener("click",()=>{
