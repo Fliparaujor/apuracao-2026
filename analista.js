@@ -100,7 +100,7 @@ document.querySelectorAll("[data-question]").forEach(b=>b.addEventListener("clic
   else if(b.dataset.question.startsWith("Investigue"))$("ai-mode").value="investigar";
 }));
 setInterval(()=>{
-  if(!state.active||!state.auto||!state.configured||state.working||document.hidden)return;
+  if(!state.active||!document.getElementById("analyst").classList.contains("active")||!state.auto||!state.configured||state.working||document.hidden)return;
   if(Date.now()-state.last<180000||signature()===state.lastSignature)return;
   if(($("source-time")?.textContent||"").includes("sem resposta válida"))return;
   analyze();
