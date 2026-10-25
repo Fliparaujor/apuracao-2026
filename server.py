@@ -17,6 +17,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import inteligencia
 import conselho
+import relatorio_local
 
 ROOT = Path(__file__).resolve().parent
 ORIGIN = "https://resultados.tse.jus.br/oficial/ele2026/"
@@ -43,9 +44,29 @@ class Handler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def do_GET(self):
-        path = urllib.parse.urlsplit(self.path).path
+        parts = urllib.parse.urlsplit(self.path)
+        path = parts.path
         if path in ("/", "/index"):
             self.path = "/ao-vivo.html"
+        if path == "/api/saude":
+            self.send_json(200, {
+                "ok": True, "nome": "Radar 2026", "servidor": "Termux",
+                "python_ativo": True, "versao": "2026.10.25-keyless",
+                "ia_conectada": inteligencia.status()["configurada"],
+                "nota": "IA conectada indica somente chave presente, não autenticada."
+            })
+            return
+        if path == "/api/relatorio":
+            scope = urllib.parse.parse_qs(parts.query).get("scope", ["br"])[0]
+            try:
+                report = relatorio_local.build(scope)
+                self.send_json(200 if report["ok"] else 503, report)
+            except ValueError:
+                self.send_json(400, {"erro":"Região inválida."})
+            except Exception as exc:
+                print("Relatório local:", type(exc).__name__)
+                self.send_json(502, {"erro":"Não foi possível ler dados oficiais. Tente novamente."})
+            return
         if path == "/api/ia/diagnostico":
             self.diagnose_groq()
             return
