@@ -61,7 +61,7 @@ class CouncilTests(unittest.TestCase):
                 return {"id":"groq_oss","name":"GPT OSS","provider":"Groq","role":"Quantitativo","ok":True,"text":"Fato"}
             return {"id":"groq_qwen","name":"Qwen","provider":"Groq","role":"Cético","ok":False,"error":"rate limit"}
         with patch.dict(os.environ,{"GROQ_API_KEY":"dummy","MISTRAL_API_KEY":"","OPENROUTER_API_KEY":"","COHERE_API_KEY":"","GEMINI_API_KEY":""}):
-            with patch.object(conselho,"_last_run",0),patch.object(conselho.inteligencia,"collect",return_value=self.make_evidence()),patch.object(conselho,"seat_result",side_effect=initial):
+            with patch.object(conselho,"_last_run",-10000000),patch.object(conselho.inteligencia,"collect",return_value=self.make_evidence()),patch.object(conselho,"seat_result",side_effect=initial):
                 result=conselho.deliberate({"scope":"br"})
                 self.assertEqual(result["status"],"insuficiente")
                 self.assertEqual(result["sintese"],"")
