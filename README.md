@@ -78,3 +78,64 @@ A chave permanece somente no processo/sessão do Termux; reiniciando o aplicativ
 **Limitações importantes:** não é observação ininterrupta; a aba precisa estar aberta e o Android precisa manter o Termux executando. O Gemini não navega na imprensa; só interpreta os boletins recuperados, e pode errar. Não produz prognóstico de quem será eleito nem chances numéricas. Em problemas de TSE ou cota do Gemini, a aba explicita a falha. Os arquivos oficiais podem mudar de formato ou ficar indisponíveis temporariamente.
 
 O Google pode usar conteúdo enviado pela API gratuita para melhorar seus serviços; evite inserir dados pessoais nas perguntas. Confirme a política atual ao cadastrar sua chave.
+
+
+## ◈ O Conselho — debate entre várias IAs (25/10/2026)
+
+O Conselho é uma **segunda aba nova** do Radar 2026: chega a ter **6 modelos de 5 provedores**, conforme as chaves que você configurar no Termux. Nenhuma assinatura de chatbot é usada como se fosse API. Nenhuma API paga é cadastrada automaticamente.
+
+| Cadeira | Provedor | Modelo | Variável de ambiente |
+| --- | --- | --- | --- |
+| Quantitativo | Groq | GPT-OSS 120B | GROQ_API_KEY |
+| Cético | Groq | Qwen 3.8 27B | GROQ_API_KEY |
+| Regional | Mistral | Mistral Small | MISTRAL_API_KEY |
+| Histórico | OpenRouter | Router de modelos gratuitos (varia) | OPENROUTER_API_KEY |
+| Auditoria | Cohere | Command A+ (trial/eval) | COHERE_API_KEY |
+| Contraponto | Gemini | Gemini Flash (quando elegível para a cota Free) | GEMINI_API_KEY |
+
+**Apenas membros com chave e resposta bem-sucedida participam.** Duas IAs do Groq com uma única chave não significam dois provedores independentes. O OpenRouter usa SOMENTE \`openrouter/free\`, sem fallback pago. Serviços que agora exigem cartão ou pagamento (por exemplo, SambaNova e o crédito promocional da Cerebras, conforme condições recentes) ficaram de fora para respeitar a restrição de **não cadastrar faturamento**.
+
+**Começando só pelo Groq, sem faturamento:**
+
+1. Crie sua chave no [GroqCloud](https://console.groq.com/keys), selecionando o nível gratuito.
+2. No Termux, pare o servidor atual com **Ctrl+C**.
+3. Execute um comando por vez:
+
+\`\`\`bash
+cd ~/apuracao-2026
+git pull
+read -rsp "Cole a chave do Groq: " GROQ_API_KEY; echo
+export GROQ_API_KEY
+python server.py
+\`\`\`
+
+4. Quando o Termux pedir, cole o segredo **lá no próprio Termux**, nunca nesta conversa. Digitar não exibe caracteres. Abra [localhost](http://127.0.0.1:8080/ao-vivo.html) → aba **◈ Conselho** → **Convocar Conselho**.
+
+Para ativar novos membros, interrompa o servidor (**Ctrl+C**) e, ANTES de iniciar \`python server.py\`, exporte outras chaves gratuitas:
+
+\`\`\`bash
+read -rsp "Chave Mistral: " MISTRAL_API_KEY; echo
+export MISTRAL_API_KEY
+read -rsp "Chave OpenRouter: " OPENROUTER_API_KEY; echo
+export OPENROUTER_API_KEY
+read -rsp "Chave Cohere: " COHERE_API_KEY; echo
+export COHERE_API_KEY
+# (Opcional) caso sua conta Google tenha Gemini API Free:
+read -rsp "Chave Gemini: " GEMINI_API_KEY; echo
+export GEMINI_API_KEY
+python server.py
+\`\`\`
+
+Só faça as linhas dos provedores que tiverem chave; os demais permanecem inativos. Cada provedor tem termos de uso, políticas de tratamento de dados e limites gratuitos próprios. Para o modo Free não há cadastro de cartão feito pelo aplicativo. Nunca compartilhe as chaves por WhatsApp ou screenshot. A consulta ao TSE é pública, mas sua pergunta é enviada aos provedores configurados.
+
+### Como uma reunião funciona
+
+1. **Análises independentes:** cada modelo recebe somente os mesmos boletins públicos do TSE, a pergunta e uma função específica.
+2. **Críticas cruzadas:** cada modelo analisa os argumentos de outros modelos, aponta falhas, concordâncias fundamentadas e dados faltantes.
+3. **Relatoria:** um modelo sintetiza pontos de convergência e as discordâncias não resolvidas. Não declara consenso quando só uma IA respondeu.
+
+Os pareceres e réplicas aparecem separadamente. O relatório não é previsão eleitoral, não estima probabilidades, não recomenda votos e não substitui a totalização do TSE. Uma sessão pode consumir **2 chamadas por modelo + 1 para o relator**. O app permite reunião manual e atualização opcional a cada dez minutos quando houver boletim novo e a aba estiver aberta, com intervalo mínimo no servidor de nove minutos. Se um modelo não responder, aparece como indisponível, sem forjar participação.
+
+**Observação:** recursos gratuitos podem ser retirados, sofrer erros HTTP 429, ou exigir políticas adicionais de conta sem aviso. As chaves não ficam em \`index.html\` nem \`conselho.js\`; os endpoints localizados em \`/api/conselho/status\` e \`/api/conselho/debater\` recebem somente a pergunta/UF. O número que aparece como "ativado" indica chave presente, não comprovação prévia de disponibilidade do serviço. O console no Termux precisa ficar executando.
+
+O código é validado com \`python -m unittest discover -s tests -v\`, \`python -m py_compile\` e \`node --check\` no GitHub Actions. A validação é sintática/unitária com respostas simuladas; é preciso configurar chaves e testar a conexão real no próprio S23.
