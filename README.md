@@ -152,3 +152,9 @@ Os pareceres e réplicas aparecem separadamente. O relatório não é previsão 
 **Observação:** recursos gratuitos podem ser retirados, sofrer erros HTTP 429, ou exigir políticas adicionais de conta sem aviso. As chaves não ficam em \`index.html\` nem \`conselho.js\`; os endpoints localizados em \`/api/conselho/status\` e \`/api/conselho/debater\` recebem somente a pergunta/UF. O número que aparece como "ativado" indica chave presente, não comprovação prévia de disponibilidade do serviço. O console no Termux precisa ficar executando.
 
 O código é validado com \`python -m unittest discover -s tests -v\`, \`python -m py_compile\` e \`node --check\` no GitHub Actions. A validação é sintática/unitária com respostas simuladas; é preciso configurar chaves e testar a conexão real no próprio S23.
+
+### Diagnóstico seguro do Groq (erro HTTP 401/403)
+
+O botão **Testar autenticação Groq** na aba Analista consulta a API de modelos do Groq pelo servidor Termux e mostra o HTTP sem expor a chave. Também pode abrir `http://127.0.0.1:8080/api/ia/diagnostico` no Chrome; a resposta nunca inclui a chave. `401` significa que a credencial enviada foi rejeitada; `403` indica acesso negado; `429` é limite de consultas e `200` confirma apenas autenticação (não disponibilidade de modelo). Uma variável presente pode conter uma chave inválida: status "configurada" significa apenas que existe um valor na variável. Se uma chave foi publicada em print/chat, revogue-a e gere outra. Após trocar a variável, reinicie `python server.py`.
+
+O Radar também avisa quando o horário do último boletim do TSE está mais de 10 minutos atrasado em relação ao horário do dispositivo (considerando data/hora de Brasília). Uma resposta HTTP 200 do TSE comprova conexão, não necessariamente que há novos votos.
