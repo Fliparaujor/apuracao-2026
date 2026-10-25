@@ -21,8 +21,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Compile Termux server and intelligence module
-        run: python -m py_compile server.py inteligencia.py conselho.py groq_provider.py
+        run: python -m py_compile server.py inteligencia.py conselho.py groq_provider.py relatorio_local.py
       - name: Unit test calculations and guards
         run: python -m unittest discover -s tests -v
       - name: Check frontend syntax
-        run: node --check analista.js && node --check conselho.js
+        run: node --check analista.js && node --check conselho.js && node -e "const h=require('fs').readFileSync('diagnostico.html','utf8');new Function(h.match(/<script>([\\s\\S]*?)<\\/script>/)[1]);"
