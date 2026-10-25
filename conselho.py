@@ -250,8 +250,8 @@ def deliberate(body: dict) -> dict:
         now=time.monotonic()
         if now-_last_run<COOLDOWN_SECONDS:
             raise RuntimeError("Aguarde mais "+str(int(COOLDOWN_SECONDS-(now-_last_run)))+"s para outra sessão e preserve suas cotas gratuitas.")
-        _last_run=now
         evidence_raw=inteligencia.collect(scope,"resumo")
+        _last_run=time.monotonic()
         evidence=compact_for_council(evidence_raw)
         prompt=("EVIDÊNCIA ÚNICA, ARQUIVOS OFICIAIS DO TSE:\n"+
             json.dumps(evidence,ensure_ascii=False,separators=(",",":"))+
