@@ -62,7 +62,7 @@ class Handler(SimpleHTTPRequestHandler):
         try:
             req = urllib.request.Request(
                 ORIGIN + relative,
-                headers={"Accept": "application/json", "User-Agent": "Radar-2026/1.0 (TSE official results, personal use)"},
+                headers={"Accept": "application/json", "User-Agent": "Mozilla/5.0 (Linux; Android 16; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36"},
             )
             with urllib.request.urlopen(req, timeout=TIMEOUT) as response:
                 data = response.read(4 * 1024 * 1024 + 1)
