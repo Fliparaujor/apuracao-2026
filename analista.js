@@ -8,15 +8,15 @@ const div=document.createElement("div");div.className="view";div.id="analyst";
 div.innerHTML=[
 '<section class="card"><div class="card-head"><h2>✦ Analista político com IA</h2><span id="ai-state" class="pill warn">Verificando</span></div>',
 '<p class="ai-copy">Interpretação contextual dos resultados oficiais, diferenças regionais e histórico do primeiro turno. A IA diferencia fatos, cálculos e hipóteses; não produz probabilidades eleitorais.</p>',
-'<div class="notice">Números oficiais do TSE; interpretação gerada pelo Gemini, sujeita a erros. Os dados públicos e a pergunta serão enviados ao modelo. Consulte os boletins e horários.</div>',
-'<div class="ai-guide" id="ai-guide" hidden><b>Para ativar a IA</b><p>Crie uma chave gratuita no Google AI Studio. No Termux, encerre o servidor com Ctrl+C, depois execute:</p>',
+'<div class="notice">Números oficiais do TSE; interpretação gerada pela IA via Groq Free ou Gemini, sujeita a erros. Os dados públicos e a pergunta serão enviados ao modelo. Consulte os boletins e horários.</div>',
+'<div class="ai-guide" id="ai-guide" hidden><b>Para ativar a IA</b><p>Crie uma conta gratuita no GroqCloud (sem conta de faturamento) e gere uma chave na área API Keys. No Termux, encerre o servidor com Ctrl+C, depois execute:</p>',
 '<code>cd ~/apuracao-2026\n',
 'git pull\n',
-'read -rsp "Cole sua chave Gemini: " GEMINI_API_KEY; echo\n',
-'export GEMINI_API_KEY\n',
+'read -rsp "Cole sua chave Groq: " GROQ_API_KEY; echo\n',
+'export GROQ_API_KEY\n',
 'python server.py</code>',
 '<p>A chave fica só nesta sessão do Termux. Não compartilhe com outras pessoas e não a coloque no GitHub.</p>',
-'<a href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener">Abrir Google AI Studio</a></div>',
+'<a href="https://console.groq.com/keys" target="_blank" rel="noopener">Criar chave grátis no GroqCloud</a></div>',
 '<label class="ai-label" for="ai-mode">Tipo de análise</label>',
 '<select id="ai-mode" class="ai-control"><option value="resumo">Briefing — o que aconteceu?</option><option value="investigar">Investigação — estados e 1º turno</option><option value="cenarios">Cenários aritméticos sem previsão</option></select>',
 '<label class="ai-label" for="ai-question">O que você quer investigar? (opcional)</label>',
@@ -58,7 +58,7 @@ async function status(){
     const data=await response.json();state.configured=!!data.configurada;
     statusLine(state.configured?("IA · "+data.modelo):"Sem chave",state.configured);
     $("ai-guide").hidden=state.configured;$("ai-submit").disabled=!state.configured;
-    if(!state.last)$("ai-output").textContent=state.configured?"IA conectada. Faça sua pergunta e pressione Analisar agora.":"Configure a chave Gemini com as instruções acima. O painel do TSE continua operando mesmo sem a IA.";
+    if(!state.last)$("ai-output").textContent=state.configured?"IA conectada. Faça sua pergunta e pressione Analisar agora.":"Configure a chave Groq gratuita com as instruções acima. O painel do TSE continua operando mesmo sem a IA.";
   }catch(e){
     state.configured=false;$("ai-guide").hidden=false;$("ai-submit").disabled=true;
     statusLine("Atualize o Termux",false);
@@ -69,7 +69,7 @@ async function analyze(){
   if(!state.configured||state.working)return;
   state.working=true;state.last=Date.now();state.lastSignature=signature();
   $("ai-submit").disabled=true;statusLine("Analisando…",false);
-  $("ai-output").textContent="Consultando TSE e primeiro turno, comparando regiões e produzindo a interpretação do Gemini…";
+  $("ai-output").textContent="Consultando TSE e primeiro turno, comparando regiões e produzindo a interpretação da IA…";
   $("ai-source").textContent="";
   const control=new AbortController(),timeout=setTimeout(()=>control.abort(),100000);
   try{
