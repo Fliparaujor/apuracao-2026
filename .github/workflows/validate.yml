@@ -1,0 +1,25 @@
+name: Validate Radar 2026
+on:
+  push:
+    paths:
+      - 'server.py'
+      - 'inteligencia.py'
+      - 'analista.js'
+      - 'ao-vivo.html'
+      - 'tests/**'
+      - '.github/workflows/validate.yml'
+  workflow_dispatch:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Termux server and intelligence module
+        run: python -m py_compile server.py inteligencia.py
+      - name: Unit test calculations and guards
+        run: python -m unittest discover -s tests -v
+      - name: Check frontend syntax
+        run: node --check analista.js
