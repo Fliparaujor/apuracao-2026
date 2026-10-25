@@ -82,7 +82,7 @@ O Google pode usar conteúdo enviado pela API gratuita para melhorar seus servi�
 
 ## ◈ O Conselho — debate entre várias IAs (25/10/2026)
 
-O Conselho é uma **segunda aba nova** do Radar 2026: chega a ter **6 modelos de 5 provedores**, conforme as chaves que você configurar no Termux. Nenhuma assinatura de chatbot é usada como se fosse API. Nenhuma API paga é cadastrada automaticamente.
+O Conselho é uma **segunda aba nova** do Radar 2026: chega a ter **7 modelos de 6 provedores**, conforme as chaves que você configurar no Termux. Nenhuma assinatura de chatbot é usada como se fosse API. Nenhuma API paga é cadastrada automaticamente.
 
 | Cadeira | Provedor | Modelo | Variável de ambiente |
 | --- | --- | --- | --- |
@@ -91,6 +91,7 @@ O Conselho é uma **segunda aba nova** do Radar 2026: chega a ter **6 modelos de
 | Regional | Mistral | Mistral Small | MISTRAL_API_KEY |
 | Histórico | OpenRouter | Router de modelos gratuitos (varia) | OPENROUTER_API_KEY |
 | Auditoria | Cohere | Command A+ (trial/eval) | COHERE_API_KEY |
+| Investigação | Cloudflare Workers AI | Nemotron 3 120B (Free, 10 mil Neurons/dia) | CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID |
 | Contraponto | Gemini | Gemini Flash (quando elegível para a cota Free) | GEMINI_API_KEY |
 
 **Apenas membros com chave e resposta bem-sucedida participam.** Duas IAs do Groq com uma única chave não significam dois provedores independentes. O OpenRouter usa SOMENTE \`openrouter/free\`, sem fallback pago. Serviços que agora exigem cartão ou pagamento (por exemplo, SambaNova e o crédito promocional da Cerebras, conforme condições recentes) ficaram de fora para respeitar a restrição de **não cadastrar faturamento**.
@@ -125,6 +126,18 @@ read -rsp "Chave Gemini: " GEMINI_API_KEY; echo
 export GEMINI_API_KEY
 python server.py
 \`\`\`
+
+Opcional para Cloudflare (precisa de **plano Workers Free**, ID da conta e token com permissão Workers AI; mantenha a conta no plano Free para evitar cobranças):
+
+```bash
+read -rsp "Token Cloudflare Workers AI: " CLOUDFLARE_API_TOKEN; echo
+export CLOUDFLARE_API_TOKEN
+read -rp "ID da conta Cloudflare: " CLOUDFLARE_ACCOUNT_ID
+export CLOUDFLARE_ACCOUNT_ID
+python server.py
+```
+
+Acesse https://dash.cloudflare.com para obter o Account ID e gerar o token Workers AI. O código só chama o modelo `@cf/nvidia/nemotron-3-120b-a12b` do Workers Free; **não** ativa modelos terceirizados via Unified Billing. O plano Free impõe o limite de 10 mil Neurons/dia e nega o excesso, conforme a documentação da Cloudflare.
 
 Só faça as linhas dos provedores que tiverem chave; os demais permanecem inativos. Cada provedor tem termos de uso, políticas de tratamento de dados e limites gratuitos próprios. Para o modo Free não há cadastro de cartão feito pelo aplicativo. Nunca compartilhe as chaves por WhatsApp ou screenshot. A consulta ao TSE é pública, mas sua pergunta é enviada aos provedores configurados.
 
