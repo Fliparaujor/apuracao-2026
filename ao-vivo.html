@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Radar 2026 — 2º turno ao vivo</title>
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <style>
 :root{color-scheme:dark;--bg:#090e19;--panel:#121c2b;--panel2:#192538;--line:#29394f;--text:#f5f7fc;--muted:#91a2ba;--red:#f36e78;--blue:#69acfa;--green:#75dfb2;--amber:#eec27a}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse 100% 35% at 50% -5%,#1c3150 0%,transparent 75%),var(--bg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
@@ -96,7 +97,7 @@ const history={};
 function loadHist(k){if(history[k])return history[k];try{let h=JSON.parse(localStorage.getItem(histKey(k))||"[]");history[k]=Array.isArray(h)?h:[];}catch(e){history[k]=[];}return history[k];}
 function remember(k,d){if(!d.valid||!d.cands.length)return;const h=loadHist(k),s={t:Date.now(),source:d.date,id:d.id,p:d.cands.map(c=>({n:c.num,v:c.v,p:c.pct})),counted:d.counted,valid:d.valid};const old=h[h.length-1];if(old&&old.id===s.id&&old.counted===s.counted&&old.valid===s.valid)return;h.push(s);if(h.length>240)h.splice(0,h.length-240);try{localStorage.setItem(histKey(k),JSON.stringify(h))}catch(e){}}
 async function fetchOne(key,gov=false){const k=(gov?"gov-":"pres-")+key;const controller=new AbortController(),tm=setTimeout(()=>controller.abort(),12000);
-try{const u=race(key,gov)+"?v="+Math.floor(Date.now()/15000);const r=await fetch(u,{signal:controller.signal,cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const data=decode(await r.json());if(data.turn&&data.turn!=="2")throw Error("Resposta não corresponde ao 2º turno");cache[k]=data;errors[k]="";remember(k,data);return data;}catch(e){errors[k]=e.name==="AbortError"?"TSE demorou para responder":(e.message||"Falha de rede");return null;}finally{clearTimeout(tm);}}
+try{const direct=race(key,gov);const local=(location.hostname==="127.0.0.1"||location.hostname==="localhost");const u=(local?"/api/tse/"+direct.slice(ROOT.length):direct)+"?v="+Math.floor(Date.now()/15000);const r=await fetch(u,{signal:controller.signal,cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const data=decode(await r.json());if(data.turn&&data.turn!=="2")throw Error("Resposta não corresponde ao 2º turno");cache[k]=data;errors[k]="";remember(k,data);return data;}catch(e){errors[k]=e.name==="AbortError"?"TSE demorou para responder":(e.message||"Falha de rede");return null;}finally{clearTimeout(tm);}}
 async function pool(tasks,limit=5){let pos=0;await Promise.all(Array.from({length:Math.min(limit,tasks.length)},async()=>{while(pos<tasks.length){const task=tasks[pos++];await task();}}));}
 function candidateClass(c){return c.num==="13"?"red":c.num==="22"?"blue":"";}
 function snapshot(key,gov=false){return cache[(gov?"gov-":"pres-")+key];}
